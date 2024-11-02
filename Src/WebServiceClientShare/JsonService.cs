@@ -28,11 +28,7 @@ public class JsonService : WebService
     
     protected string? GetString(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
@@ -46,11 +42,7 @@ public class JsonService : WebService
 
     protected async Task<string?> GetStringAsync(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri);
@@ -64,11 +56,7 @@ public class JsonService : WebService
 
     protected T? GetFromJson<T>(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
@@ -83,11 +71,7 @@ public class JsonService : WebService
 
     protected async Task<T?> GetFromJsonAsync<T>(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri);
@@ -102,11 +86,7 @@ public class JsonService : WebService
 
     protected T? PutAsJson<T>(string requestUri, T obj)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
@@ -126,11 +106,7 @@ public class JsonService : WebService
 
     protected async Task<T?> PutAsJsonAsync<T>(string requestUri, T obj)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
@@ -150,11 +126,7 @@ public class JsonService : WebService
 
     protected void PostAsJson<T>(string requestUri, T obj)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
@@ -172,11 +144,7 @@ public class JsonService : WebService
 
     protected async Task PostAsJsonAsync<T>(string requestUri, T obj)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
@@ -194,11 +162,7 @@ public class JsonService : WebService
 
     protected Stream GetFromStream(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
@@ -215,11 +179,7 @@ public class JsonService : WebService
 
     protected async Task<Stream> GetFromStreamAsync(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri);
@@ -236,11 +196,7 @@ public class JsonService : WebService
 
     protected void Delete(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argemtn is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.DeleteAsync(requestUri).Result;
@@ -252,11 +208,7 @@ public class JsonService : WebService
 
     protected async Task DeleteAsync(string requestUri)
     {
-#if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-#else
-        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argemtn is null or empty", nameof(requestUri));
-#endif
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.DeleteAsync(requestUri);

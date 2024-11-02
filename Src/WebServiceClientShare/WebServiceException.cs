@@ -23,4 +23,6 @@ public class WebServiceException : Exception
             throw new WebServiceException("WebService is not connected");
         }
     }
+
+    
 }

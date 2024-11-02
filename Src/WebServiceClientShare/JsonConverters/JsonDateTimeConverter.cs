@@ -9,17 +9,14 @@
 
 public class JsonDateTimeConverter : JsonConverter<DateTime?>
 {
-    private static readonly CultureInfo culture =
-        //new("en-US");
-        CultureInfo.InvariantCulture;
-
     public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         string? str = reader.GetString();
-        //if (str[])
-        //str = str?.Insert(str.Length - 2, ":");
-        if (str == null) return null;
-        if (DateTime.TryParse(str, culture, out DateTime dateTime))
+        ////if (str[])
+        ////str = str?.Insert(str.Length - 2, ":");
+        //if (str == null) return null;
+
+        if (DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
         {
             return dateTime.ToLocalTime();
         }
@@ -29,7 +26,7 @@ public class JsonDateTimeConverter : JsonConverter<DateTime?>
 
     public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
     {
-        string? str = value?.ToString("ddd, dd MM yyyy hh:mm:ss zzz", culture);
+        string? str = value?.ToString("ddd, dd MM yyyy hh:mm:ss zzz", CultureInfo.InvariantCulture);
         writer.WriteStringValue(str);
     }
 }

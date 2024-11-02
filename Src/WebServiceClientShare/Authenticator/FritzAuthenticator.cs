@@ -1,15 +1,26 @@
 ﻿namespace WebServiceClient.Authenticator;
 
+#if NET8_0_OR_GREATER
 public class FritzAuthenticator(string login, string password) : IAuthenticator
 {
+#else
+public class FritzAuthenticator : IAuthenticator
+{
+    private readonly string login;
+    private readonly string password;
+
+    public FritzAuthenticator(string login, string password)
+    {
+        this.login = login;
+        this.password = password;
+    }
+#endif
 
     public void Authenticate(HttpClient client)
     {
 
         string? sessionId;
-        string?challenge;
-
-
+        string? challenge;
 
         using (HttpResponseMessage response = client.GetAsync("login_sid.lua").Result)
         {
@@ -31,14 +42,16 @@ public class FritzAuthenticator(string login, string password) : IAuthenticator
             XDocument doc = XDocument.Load(stream);
             XElement? info = doc.FirstNode as XElement;
             sessionId = info?.Element("SID")?.Value;
-
         }
     }
 
-    private string GetMD5Hash(string input)
+    private static string GetMD5Hash(string input)
     {
-        MD5 md5Hasher = MD5.Create();
-        byte[] data = md5Hasher.ComputeHash(Encoding.Unicode.GetBytes(input));
+        byte[] data = MD5.HashData(Encoding.Unicode.GetBytes(input));
         return data.Select(d => d.ToString("x2")).Aggregate((a, b) => a + b);
+
+        //MD5 md5Hasher = MD5.Create();
+        //byte[] data = md5Hasher.ComputeHash(Encoding.Unicode.GetBytes(input));
+        //return data.Select(d => d.ToString("x2")).Aggregate((a, b) => a + b);
     }
 }

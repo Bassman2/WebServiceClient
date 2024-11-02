@@ -12,15 +12,15 @@ public class WebServiceException : Exception
         : base($"{statusCode} {reasonPhrase}: \"{requestUri}\" {message}")
     { }
 
-    public static void ThrowIfNullOrNotConnected(JsonService? service)
+    public static void ThrowIfNullOrNotConnected(WebService? service)
     {
         if (service == null)
         {
-            throw new WebServiceException("JsonService is null");
+            throw new WebServiceException("WebService is null");
         }
         if (!service.IsConnected)
         {
-            throw new WebServiceException("JsonService is not connected");
+            throw new WebServiceException("WebService is not connected");
         }
     }
 }

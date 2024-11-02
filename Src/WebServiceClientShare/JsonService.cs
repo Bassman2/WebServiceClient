@@ -1,12 +1,25 @@
-﻿using System.Text.Json.Serialization.Metadata;
+﻿#if NET8_0_OR_GREATER
+using System.Text.Json.Serialization.Metadata;
+#endif
 
 namespace WebServiceClient;
 
+#if NET8_0_OR_GREATER
 public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator? authenticator = null) : WebService(host, authenticator)
 {
+#else
+public class JsonService : WebService
+{
+    public JsonService(Uri host, IAuthenticator? authenticator = null) 
+    : base(host, authenticator)
+    {}
+
+#endif
     protected readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
+#if NET8_0_OR_GREATER
         TypeInfoResolver = context,
+#endif
         Converters =
         {
             new JsonDateTimeConverter()
@@ -15,7 +28,11 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
     
     protected string? GetString(string requestUri)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
+#endif
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
@@ -29,52 +46,63 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
 
     protected T? GetFromJson<T>(string requestUri)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
+#endif
         WebServiceException.ThrowIfNullOrNotConnected(this);
-        
+
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
         string str = response.Content.ReadAsStringAsync().Result;
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response);
         }
-        Type x = typeof(T);
-        //return response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions).Result;
-        return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
+
+        return ReadFromJson<T>(response);
     }
 
     protected T? PutAsJson<T>(string requestUri, T obj)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
+#endif
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
+#if NET8_0_OR_GREATER
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-
-        //using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
         using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+#else
+        using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
+#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response);
         }
-        //return response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions).Result;
 
-        //return response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions).Result;
-        //return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
-        return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
-
+        return ReadFromJson<T>(response);
     }
 
     protected void PostAsJson<T>(string requestUri, T obj)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
+#endif
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
+#if NET8_0_OR_GREATER
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-
-        //using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
         using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+#else
+        using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
+#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response);
@@ -83,7 +111,11 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
 
     protected Stream GetFromStream(string requestUri)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argument is null or empty", nameof(requestUri));
+#endif
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
@@ -100,7 +132,11 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
 
     protected void Delete(string requestUri)
     {
+#if NET8_0_OR_GREATER
         ArgumentException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+#else
+        if (string.IsNullOrEmpty(requestUri)) throw new ArgumentException("The argemtn is null or empty", nameof(requestUri));
+#endif
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = client!.DeleteAsync(requestUri).Result;
@@ -109,4 +145,26 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
             ErrorHandling(response);
         }
     }
+
+    private T? ReadFromJson<T>(HttpResponseMessage response)
+    {
+#if NET8_0_OR_GREATER
+        //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
+
+        return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
+#else
+        return response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions).Result;
+#endif
+    }
+
+    private async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response)
+    {
+#if NET8_0_OR_GREATER
+        return (T?) await response.Content.ReadFromJsonAsync(typeof(T), context);
+#else
+        return await response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions);
+#endif
+    }
 }
+

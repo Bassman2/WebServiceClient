@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServiceClient80", "Src\WebServiceClient80\WebServiceClient80.csproj", "{3FD95652-B8A1-441C-B45B-360F38DC47AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{EC9AC36D-59FE-4D6A-B4E5-A3868136DE35}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WebServiceClientShare", "Src\WebServiceClientShare\WebServiceClientShare.shproj", "{8CAACB04-9656-4B7C-A692-422FCA51474B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{DF71D31D-B957-47C5-B78F-FD3321AAF7EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceShareConsole", "Test\WebServiceShareConsole\WebServiceShareConsole.csproj", "{638E30F3-183D-4BD6-A1D3-B3C346D5143E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceDepenencyConsole", "Test\WebServiceDepenencyConsole\WebServiceDepenencyConsole.csproj", "{FA156A53-4838-44A0-B8CE-2D10F4104336}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|x64.Build.0 = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Debug|x86.Build.0 = Debug|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|x64.ActiveCfg = Release|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|x64.Build.0 = Release|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC}.Release|x86.Build.0 = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|x64.Build.0 = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Debug|x86.Build.0 = Debug|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|x64.ActiveCfg = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|x64.Build.0 = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|x86.ActiveCfg = Release|Any CPU
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E}.Release|x86.Build.0 = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|x64.Build.0 = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA156A53-4838-44A0-B8CE-2D10F4104336}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3FD95652-B8A1-441C-B45B-360F38DC47AC} = {EC9AC36D-59FE-4D6A-B4E5-A3868136DE35}
+		{8CAACB04-9656-4B7C-A692-422FCA51474B} = {EC9AC36D-59FE-4D6A-B4E5-A3868136DE35}
+		{638E30F3-183D-4BD6-A1D3-B3C346D5143E} = {DF71D31D-B957-47C5-B78F-FD3321AAF7EE}
+		{FA156A53-4838-44A0-B8CE-2D10F4104336} = {DF71D31D-B957-47C5-B78F-FD3321AAF7EE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94292425-BC6A-42A3-AE53-90B252BF139C}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Src\WebServiceClientShare\WebServiceClientShare.projitems*{3fd95652-b8a1-441c-b45b-360f38dc47ac}*SharedItemsImports = 5
+		Src\WebServiceClientShare\WebServiceClientShare.projitems*{638e30f3-183d-4bd6-a1d3-b3c346d5143e}*SharedItemsImports = 5
+		Src\WebServiceClientShare\WebServiceClientShare.projitems*{8caacb04-9656-4b7c-a692-422fca51474b}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal

@@ -9,7 +9,7 @@
     <Import_RootNamespace>WebServiceClient</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ArgumentRequestUriException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ArgumentRequestUriException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\ApiKeyAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\BasicAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\BearerAuthentication.cs" />
@@ -17,8 +17,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\IAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonConverters\JsonDateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebServiceException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\WebServiceException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Usings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Exceptions\" />
   </ItemGroup>
 </Project>

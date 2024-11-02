@@ -221,6 +221,7 @@ public class JsonService : WebService
     private T? ReadFromJson<T>(HttpResponseMessage response)
     {
 #if NET8_0_OR_GREATER
+
         //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
 

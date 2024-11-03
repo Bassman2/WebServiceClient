@@ -8,8 +8,12 @@ public class WebServiceException : Exception
         : base($"{statusCode} {reasonPhrase}: \"{requestUri}\"")
     { }
 
-    public WebServiceException(string? message, Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase) 
+    public WebServiceException(string? message, Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase)
         : base($"{statusCode} {reasonPhrase}: \"{requestUri}\" {message}")
+    { }
+
+    public WebServiceException(string? message, Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase, string memberName) 
+        : base($"{statusCode} {reasonPhrase}: \"{requestUri}\" {message} from {memberName}")
     { }
 
     public static void ThrowIfNullOrNotConnected(WebService? service)

@@ -37,8 +37,8 @@ public class WebService : IDisposable
 
     public bool IsConnected => client != null;
 
-    protected virtual void ErrorHandling(HttpResponseMessage response)
+    protected virtual void ErrorHandling(HttpResponseMessage response, string memberName)
     {
-        throw new WebServiceException(response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase);
+        throw new WebServiceException("", response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
     }
 }

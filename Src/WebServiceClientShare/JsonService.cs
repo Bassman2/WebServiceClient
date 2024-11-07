@@ -40,18 +40,18 @@ public class JsonService : WebService
         return response.Content.ReadAsStringAsync().Result;
     }
 
-    protected async Task<string?> GetStringAsync(string requestUri, [CallerMemberName] string memberName = "")
+    protected async Task<string?> GetStringAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri);
-        string str = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
-        return await response.Content.ReadAsStringAsync();
+        return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
     protected T? GetFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
@@ -69,7 +69,7 @@ public class JsonService : WebService
         return ReadFromJson<T>(response);
     }
 
-    protected async Task<T?> GetFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken = default, [CallerMemberName] string memberName = "")
+    protected async Task<T?> GetFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
@@ -104,7 +104,7 @@ public class JsonService : WebService
         return ReadFromJson<T2>(response);
     }
 
-    protected async Task<T2?> PutAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken = default, [CallerMemberName] string memberName = "")
+    protected async Task<T2?> PutAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
@@ -112,16 +112,16 @@ public class JsonService : WebService
 
 #if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo);
+        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 #else
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions);
+        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions, cancellationToken);
 #endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
 
-        return await ReadFromJsonAsync<T2>(response);
+        return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
 
     public T2? PostAsJson<T1, T2>(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
@@ -143,7 +143,7 @@ public class JsonService : WebService
         return ReadFromJson<T2>(response);
     }
 
-    protected async Task<T2?> PostAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken = default, [CallerMemberName] string memberName = "")
+    protected async Task<T2?> PostAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
@@ -151,15 +151,15 @@ public class JsonService : WebService
 
 #if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
-        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo);
+        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 #else
-        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions);
+        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions, cancellationToken);
 #endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
-        return await ReadFromJsonAsync<T2>(response);
+        return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
 
     protected Stream GetFromStream(string requestUri, [CallerMemberName] string memberName = "")
@@ -179,19 +179,19 @@ public class JsonService : WebService
         return stream;
     }
 
-    protected async Task<Stream> GetFromStreamAsync(string requestUri, [CallerMemberName] string memberName = "")
+    protected async Task<Stream> GetFromStreamAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri);
-        string str = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
         var stream = new MemoryStream();
-        await response.Content.CopyToAsync(stream);
+        await response.Content.CopyToAsync(stream, cancellationToken);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
@@ -226,34 +226,34 @@ public class JsonService : WebService
         response.Content.CopyToAsync(file).Wait();
     }
 
-    protected async Task DownloadAsync(Uri requestUri, string filePath, [CallerMemberName] string memberName = "")
+    protected async Task DownloadAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri);
-        string str = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
         using var file = File.Create(filePath);
-        await response.Content.CopyToAsync(file);
+        await response.Content.CopyToAsync(file, cancellationToken);
     }
 
-    protected async Task DownloadAsync(string requestUri, string filePath, [CallerMemberName] string memberName = "")
+    protected async Task DownloadAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri);
-        string str = await response.Content.ReadAsStringAsync();
+        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
         using var file = File.Create(filePath);
-        await response.Content.CopyToAsync(file);
+        await response.Content.CopyToAsync(file, cancellationToken);
     }
 
     protected bool Delete(string requestUri, [CallerMemberName] string memberName = "")
@@ -273,16 +273,21 @@ public class JsonService : WebService
         return true;
     }
 
-    protected async Task DeleteAsync(string requestUri, [CallerMemberName] string memberName = "")
+    protected async Task<bool> DeleteAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = await client!.DeleteAsync(requestUri);
+        using HttpResponseMessage response = await client!.DeleteAsync(requestUri, cancellationToken);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return false;
+        }
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
         }
+        return true;
     }
 
     private T? ReadFromJson<T>(HttpResponseMessage response)
@@ -298,7 +303,7 @@ public class JsonService : WebService
 #endif
     }
 
-    private async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken = default)
+    private async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
 #if NET8_0_OR_GREATER
         return (T?) await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);

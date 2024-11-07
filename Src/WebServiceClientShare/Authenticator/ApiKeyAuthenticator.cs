@@ -16,8 +16,8 @@ public class ApiKeyAuthenticator : IAuthenticator
     }
 #endif
 
-    public void Authenticate(HttpClient client)
+    public void Authenticate(WebService service)
     {
-        client.DefaultRequestHeaders.Add(name, value);
+        service.Client?.DefaultRequestHeaders.Add(name, value);
     }
 }

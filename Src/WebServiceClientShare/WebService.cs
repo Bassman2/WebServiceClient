@@ -20,7 +20,7 @@ public class WebService : IDisposable
             BaseAddress = host,
             Timeout = new TimeSpan(0, 2, 0)
         };
-        authenticator?.Authenticate(client!);
+        authenticator?.Authenticate(this);
     }
 
     public void Dispose()
@@ -34,6 +34,8 @@ public class WebService : IDisposable
     }
 
     public Uri Host { get; }
+
+    public HttpClient? Client => client;
 
     public bool IsConnected => client != null;
 

@@ -1,22 +1,29 @@
 ﻿namespace WebServiceClient.Authenticator;
 
+#if NET8_0_OR_GREATER
+internal class BasicAuthenticator(string name, string login, string password, Encoding? encoding = null) : IAuthenticator
+{
+#else
 internal class BasicAuthenticator : IAuthenticator
 {
-    private readonly string header;
+    private readonly string name;
+    private readonly string login;
+    private readonly string password;
+    private readonly Encoding? encoding;
 
-    public BasicAuthenticator(string login, string password)
-        : this(login, password, Encoding.UTF8)
+    public BasicAuthenticator(string name, string login, string password, Encoding? encoding = null)
     {
-        
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.encoding = encoding;
     }
-    public BasicAuthenticator(string login, string password, Encoding encoding)
-    {
-        header = Convert.ToBase64String(encoding.GetBytes($"{login}:{password}"));
-    }
+#endif
 
-    public void Authenticate(HttpClient client)
+    public void Authenticate(WebService service)
     {
-        throw new NotImplementedException();
+        string header = Convert.ToBase64String((encoding ?? Encoding.UTF8).GetBytes($"{login}:{password}"));
+        service.Client!.DefaultRequestHeaders.Add(name, header);
     }
 }
 

@@ -124,14 +124,14 @@ public class JsonService : WebService
         return await ReadFromJsonAsync<T2>(response);
     }
 
-    protected void PostAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
+    public T2? PostAsJson<T1, T2>(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
 #if NET8_0_OR_GREATER
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
 #else
         using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
@@ -140,16 +140,17 @@ public class JsonService : WebService
         {
             ErrorHandling(response, memberName);
         }
+        return ReadFromJson<T2>(response);
     }
 
-    protected async Task PostAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken = default, [CallerMemberName] string memberName = "")
+    protected async Task<T2?> PostAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken = default, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
 #if NET8_0_OR_GREATER
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo);
 #else
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions);
@@ -158,6 +159,7 @@ public class JsonService : WebService
         {
             ErrorHandling(response, memberName);
         }
+        return await ReadFromJsonAsync<T2>(response);
     }
 
     protected Stream GetFromStream(string requestUri, [CallerMemberName] string memberName = "")

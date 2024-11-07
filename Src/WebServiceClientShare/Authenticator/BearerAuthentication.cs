@@ -14,8 +14,8 @@ public class BearerAuthentication : IAuthenticator
     }
 #endif
 
-    public void Authenticate(HttpClient client)
+    public void Authenticate(WebService service)
     {
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        service.Client!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 }

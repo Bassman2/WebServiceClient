@@ -2,5 +2,5 @@
 
 public interface IAuthenticator
 {
-    void Authenticate(WebService service);
+    void Authenticate(WebService service, HttpClient client);
 }

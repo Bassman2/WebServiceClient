@@ -20,10 +20,10 @@ internal class BasicAuthenticator : IAuthenticator
     }
 #endif
 
-    public void Authenticate(WebService service)
+    public void Authenticate(WebService service, HttpClient client)
     {
         string header = Convert.ToBase64String((encoding ?? Encoding.UTF8).GetBytes($"{login}:{password}"));
-        service.Client!.DefaultRequestHeaders.Add(name, header);
+        client.DefaultRequestHeaders.Add(name, header);
     }
 }
 

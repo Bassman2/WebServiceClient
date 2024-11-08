@@ -16,13 +16,13 @@ public class FritzAuthenticator : IAuthenticator
     }
 #endif
 
-    public void Authenticate(WebService service)
+    public void Authenticate(WebService service, HttpClient client)
     {
 
         string? sessionId;
         string? challenge;
 
-        using (HttpResponseMessage response = service.Client!.GetAsync("login_sid.lua").Result)
+        using (HttpResponseMessage response = client.GetAsync("login_sid.lua").Result)
         {
             response.EnsureSuccessStatusCode();
             Stream stream = response.Content.ReadAsStreamAsync().Result;
@@ -36,7 +36,7 @@ public class FritzAuthenticator : IAuthenticator
         {
             string resp = $"{challenge}-{GetMD5Hash(challenge + "-" + password)}";
             string request = $"login_sid.lua?username={login}&response={resp}";
-            using HttpResponseMessage response = service.Client!.GetAsync(request).Result;
+            using HttpResponseMessage response = client.GetAsync(request).Result;
             response.EnsureSuccessStatusCode();
             Stream stream = response.Content.ReadAsStreamAsync().Result;
             XDocument doc = XDocument.Load(stream);

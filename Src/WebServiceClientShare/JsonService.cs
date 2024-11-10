@@ -1,26 +1,10 @@
-﻿#if NET8_0_OR_GREATER
-using System.Net.Http.Json;
-using System.Text.Json.Serialization.Metadata;
-#endif
+﻿namespace WebServiceClient;
 
-namespace WebServiceClient;
-
-#if NET8_0_OR_GREATER
 public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator? authenticator = null) : WebService(host, authenticator)
 {
-#else
-public class JsonService : WebService
-{
-    public JsonService(Uri host, IAuthenticator? authenticator = null) 
-    : base(host, authenticator)
-    {}
-
-#endif
     protected readonly JsonSerializerOptions jsonSerializerOptions = new()
     {
-#if NET8_0_OR_GREATER
         TypeInfoResolver = context,
-#endif
         Converters =
         {
             new JsonDateTimeConverter()
@@ -63,12 +47,9 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+
+        var jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-#else
-        using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -81,12 +62,8 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
-#else
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions, cancellationToken);
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -99,12 +76,8 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-#else
-        using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -119,12 +92,8 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
-#else
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonSerializerOptions, cancellationToken);
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -139,12 +108,8 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-#else
-        using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions).Result;
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -158,12 +123,8 @@ public class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
-#if NET8_0_OR_GREATER
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
-#else
-        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonSerializerOptions, cancellationToken);
-#endif
         if (!response.IsSuccessStatusCode)
         {
             ErrorHandling(response, memberName);
@@ -211,34 +172,17 @@ public class JsonService : WebService
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    
-
-    
-
-   
-
-
-
     private T? ReadFromJson<T>(HttpResponseMessage response)
     {
-#if NET8_0_OR_GREATER
-
         //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
 
         return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
-#else
-        return response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions).Result;
-#endif
     }
 
     private async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-#if NET8_0_OR_GREATER
         return (T?) await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
-#else
-        return await response.Content.ReadFromJsonAsync<T>(jsonSerializerOptions, cancellationToken);
-#endif
     }
 }
 

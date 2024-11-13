@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization.Metadata;
-
-namespace WebServiceClient;
+﻿namespace WebServiceClient;
 
 public class WebService : IDisposable
 {

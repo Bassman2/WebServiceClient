@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)JsonConverters\JsonDateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\WebServiceException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AsyncEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Usings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebService.cs" />
   </ItemGroup>

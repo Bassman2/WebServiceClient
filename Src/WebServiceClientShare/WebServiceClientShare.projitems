@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AsyncEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Usings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XmlService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Exceptions\" />

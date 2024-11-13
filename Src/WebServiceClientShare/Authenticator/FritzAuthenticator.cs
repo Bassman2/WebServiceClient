@@ -1,21 +1,7 @@
 ﻿namespace WebServiceClient.Authenticator;
 
-#if NET8_0_OR_GREATER
 public class FritzAuthenticator(string login, string password) : IAuthenticator
 {
-#else
-public class FritzAuthenticator : IAuthenticator
-{
-    private readonly string login;
-    private readonly string password;
-
-    public FritzAuthenticator(string login, string password)
-    {
-        this.login = login;
-        this.password = password;
-    }
-#endif
-
     public void Authenticate(WebService service, HttpClient client)
     {
 

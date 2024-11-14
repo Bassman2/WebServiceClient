@@ -1,4 +1,8 @@
-﻿namespace WebServiceClient;
+﻿
+
+
+
+namespace WebServiceClient;
 
 #if NET8_0_OR_GREATER
 public class XmlService(Uri host, IAuthenticator? authenticator = null) : WebService(host, authenticator)
@@ -11,6 +15,7 @@ public class XmlService : WebService
     {}
 #endif
 
+    [RequiresUnreferencedCode("Calls System.Xml.Serialization.XmlSerializer.XmlSerializer(Type)")]
     protected T? GetFromXml<T>(string requestUri, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -26,6 +31,7 @@ public class XmlService : WebService
         return ReadFromXml<T>(response);
     }
 
+    [RequiresUnreferencedCode("Calls System.Xml.Serialization.XmlSerializer.XmlSerializer(Type)")]
     protected async Task<T?> GetFromXmlAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -41,6 +47,7 @@ public class XmlService : WebService
         return await ReadFromXmlAsync<T>(response, cancellationToken);
     }
 
+    [RequiresUnreferencedCode("Calls System.Xml.Serialization.XmlSerializer.XmlSerializer(Type)")]
     private static T? ReadFromXml<T>(HttpResponseMessage response)
     {
         string str = response.Content.ReadAsStringAsync().Result;
@@ -53,6 +60,7 @@ public class XmlService : WebService
         }
     }
 
+    [RequiresUnreferencedCode("Calls System.Xml.Serialization.XmlSerializer.XmlSerializer(Type)")]
     private static async Task<T?> ReadFromXmlAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         string str = await response.Content.ReadAsStringAsync(cancellationToken);

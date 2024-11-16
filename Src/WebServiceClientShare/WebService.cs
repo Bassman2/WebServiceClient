@@ -39,7 +39,14 @@ public class WebService : IDisposable
 
     protected virtual void ErrorHandling(HttpResponseMessage response, string memberName)
     {
-        throw new WebServiceException("", response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
+        string str = response.Content.ReadAsStringAsync().Result;
+        throw new WebServiceException(str, response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
+    }
+
+    protected virtual async Task ErrorHandlingAsync(HttpResponseMessage response, string memberName, CancellationToken cancellationToken)
+    {
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
+        throw new WebServiceException(str, response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
     }
 
     protected string? GetString(string requestUri, [CallerMemberName] string memberName = "")

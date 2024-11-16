@@ -132,6 +132,34 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
 
+    public void PostAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorHandling(response, memberName);
+        }
+    }
+
+    protected async Task PostAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorHandling(response, memberName);
+        }
+    }
+
     public T? PostFilesFromJson<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -172,7 +200,7 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    private T? ReadFromJson<T>(HttpResponseMessage response)
+    protected T? ReadFromJson<T>(HttpResponseMessage response)
     {
         //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
@@ -180,7 +208,7 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
     }
 
-    private async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
+    protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         return (T?) await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
     }

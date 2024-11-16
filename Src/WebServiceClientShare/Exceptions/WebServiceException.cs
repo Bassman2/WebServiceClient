@@ -37,5 +37,8 @@ public class WebServiceException : Exception
         }
     }
 
-    
+    public static void ThrowHttpError(string? messagage, HttpResponseMessage response, string memberName)
+    {
+        throw new WebServiceException(messagage, response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
+    }
 }

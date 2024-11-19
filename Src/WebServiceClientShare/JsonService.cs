@@ -160,6 +160,32 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         }
     }
 
+    public T? PostFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        using HttpResponseMessage response = client!.PostAsync(requestUri, null).Result;
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorHandling(response, memberName);
+        }
+        return ReadFromJson<T>(response);
+    }
+
+    protected async Task<T?> PostFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        using HttpResponseMessage response = await client!.PostAsync(requestUri, null, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            ErrorHandling(response, memberName);
+        }
+        return await ReadFromJsonAsync<T>(response, cancellationToken);
+    }
+
     public T? PostFilesFromJson<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));

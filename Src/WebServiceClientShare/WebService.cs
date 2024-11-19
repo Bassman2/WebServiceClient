@@ -256,4 +256,38 @@ public class WebService : IDisposable
             ErrorHandling(response, memberName);
         }
     }
+
+
+    #region Url Helper
+
+    protected static string CombineUrl(params string[] urlParts)
+    {
+        string str = urlParts.Aggregate("/", (a,b) => $"{a.Trim('/')}/{a.Trim('/')}");
+        return str;
+    }
+
+    protected static string CombineUrl(string urlPartA, params (string Name, string Value)[] values)
+    {
+        string str = $"/{urlPartA.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        return str;
+    }
+
+    protected static string CombineUrl(string urlPartA, string urlPartB, params (string Name, string Value)[] values)
+    {
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        return str;
+    }
+
+    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, string Value)[] values)
+    {
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        return str;
+    }
+
+    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, string Value)[] values)
+    {
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}/{urlPartD.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        return str;
+    }
+    #endregion
 }

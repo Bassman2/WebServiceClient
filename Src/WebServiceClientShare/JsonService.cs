@@ -11,20 +11,20 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         }
     };
     
-    protected T? GetFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //protected T? GetFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
-        string str = response.Content.ReadAsStringAsync().Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
+    //    using HttpResponseMessage response = client!.GetAsync(requestUri).Result;
+    //    string str = response.Content.ReadAsStringAsync().Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
 
-        return ReadFromJson<T>(response);
-    }
+    //    return ReadFromJson<T>(response);
+    //}
 
     protected async Task<T?> GetFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -41,20 +41,20 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    protected void PutAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //protected void PutAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
 
-        var jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-        using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
-    }
+    //    var jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+    //    using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
+    //}
 
     protected async Task PutAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -70,21 +70,21 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         }
     }
 
-    protected T2? PutAsJson<T1, T2 >(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //protected T2? PutAsJson<T1, T2 >(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
-        using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
+    //    JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+    //    using HttpResponseMessage response = client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
 
-        return ReadFromJson<T2>(response);
-    }
+    //    return ReadFromJson<T2>(response);
+    //}
 
     protected async Task<T2?> PutAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -102,20 +102,20 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
 
-    public T2? PostAsJson<T1, T2>(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //public T2? PostAsJson<T1, T2>(string requestUri, T1 obj, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
-        using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
-        return ReadFromJson<T2>(response);
-    }
+    //    JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+    //    using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
+    //    return ReadFromJson<T2>(response);
+    //}
 
     protected async Task<T2?> PostAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -132,19 +132,19 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
 
-    public void PostAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //public void PostAsJson<T>(string requestUri, T obj, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-        using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
-    }
+    //    JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+    //    using HttpResponseMessage response = client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
+    //}
 
     protected async Task PostAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -160,18 +160,18 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         }
     }
 
-    public T? PostFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //public T? PostFromJson<T>(string requestUri, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        using HttpResponseMessage response = client!.PostAsync(requestUri, null).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
-        return ReadFromJson<T>(response);
-    }
+    //    using HttpResponseMessage response = client!.PostAsync(requestUri, null).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
+    //    return ReadFromJson<T>(response);
+    //}
 
     protected async Task<T?> PostFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -186,25 +186,25 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    public T? PostFilesFromJson<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, [CallerMemberName] string memberName = "")
-    {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+    //public T? PostFilesFromJson<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, [CallerMemberName] string memberName = "")
+    //{
+    //    ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    WebServiceException.ThrowIfNullOrNotConnected(this);
 
-        var req = new MultipartFormDataContent();
-        req.Headers.Add("X-Atlassian-Token", "nocheck");
-        foreach (KeyValuePair<string, Stream> file in files)
-        {
-            req.Add(new StreamContent(file.Value), "file", file.Key);
-        }
+    //    var req = new MultipartFormDataContent();
+    //    req.Headers.Add("X-Atlassian-Token", "nocheck");
+    //    foreach (KeyValuePair<string, Stream> file in files)
+    //    {
+    //        req.Add(new StreamContent(file.Value), "file", file.Key);
+    //    }
 
-        using HttpResponseMessage response = client!.PostAsync(requestUri, req).Result;
-        if (!response.IsSuccessStatusCode)
-        {
-            ErrorHandling(response, memberName);
-        }
-        return ReadFromJson<T>(response);
-    }
+    //    using HttpResponseMessage response = client!.PostAsync(requestUri, req).Result;
+    //    if (!response.IsSuccessStatusCode)
+    //    {
+    //        ErrorHandling(response, memberName);
+    //    }
+    //    return ReadFromJson<T>(response);
+    //}
 
     protected async Task<T?> PostFilesFromJsonAsync<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
@@ -226,13 +226,13 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    protected T? ReadFromJson<T>(HttpResponseMessage response)
-    {
-        //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-        //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
+    //protected T? ReadFromJson<T>(HttpResponseMessage response)
+    //{
+    //    //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+    //    //return response.Content.ReadFromJsonAsync<T>(jsonTypeInfo).Result;
 
-        return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
-    }
+    //    return (T?)response.Content.ReadFromJsonAsync(typeof(T), context).Result;
+    //}
 
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {

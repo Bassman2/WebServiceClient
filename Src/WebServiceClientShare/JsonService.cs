@@ -130,6 +130,26 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
 
     #endregion
 
+
+    #region PATCH
+
+    protected async Task<T2?> PatchAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+        using HttpResponseMessage response = await client!.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            await ErrorHandlingAsync(response, memberName, cancellationToken);
+        }
+
+        return await ReadFromJsonAsync<T2>(response, cancellationToken);
+    }
+    #endregion
+
     #region Json Helper
 
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)

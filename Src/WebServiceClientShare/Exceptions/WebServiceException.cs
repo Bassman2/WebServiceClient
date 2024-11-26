@@ -25,7 +25,7 @@ public class WebServiceException : Exception
 
     public HttpStatusCode StatusCode { get; }
 
-    public static void ThrowIfNullOrNotConnected(WebService? service)
+    public static void ThrowIfNullOrNotConnected([NotNull]WebService? service)
     {
         if (service == null)
         {

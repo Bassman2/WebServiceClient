@@ -202,6 +202,12 @@ public class WebService : IDisposable
 
     #region Url Helper
 
+    private static string CombineParameter(params (string Name, string Value)[] values)
+    {
+        string str = values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}");
+        return str;
+    }
+
     protected static string CombineUrl(params string[] urlParts)
     {
         string str = urlParts.Aggregate("/", (a,b) => $"{a.Trim('/')}/{a.Trim('/')}");
@@ -210,26 +216,31 @@ public class WebService : IDisposable
 
     protected static string CombineUrl(string urlPartA, params (string Name, string Value)[] values)
     {
-        string str = $"/{urlPartA.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        string par = CombineParameter(values);
+        string str = $"/{urlPartA.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
     protected static string CombineUrl(string urlPartA, string urlPartB, params (string Name, string Value)[] values)
     {
-        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        string par = CombineParameter(values);
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
     protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, string Value)[] values)
     {
-        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        string par = CombineParameter(values);
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
     protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, string Value)[] values)
     {
-        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}/{urlPartD.Trim('/')}?" + values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").TrimEnd('?');
+        string par = CombineParameter(values);
+        string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}/{urlPartD.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
+
     #endregion
 }

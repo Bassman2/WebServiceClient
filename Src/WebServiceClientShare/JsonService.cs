@@ -130,7 +130,6 @@ public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator
 
     #endregion
 
-
     #region PATCH
 
     protected async Task<T2?> PatchAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")

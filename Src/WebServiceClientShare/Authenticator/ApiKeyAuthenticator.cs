@@ -1,6 +1,6 @@
 ﻿namespace WebServiceClient.Authenticator;
 
-public class ApiKeyAuthenticator(string name, string value) : IAuthenticator
+internal class ApiKeyAuthenticator(string name, string value) : IAuthenticator
 {
     public void Authenticate(WebService service, HttpClient client)
     {

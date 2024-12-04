@@ -1,6 +1,6 @@
 ﻿namespace WebServiceClient.Authenticator;
 
-public class FritzAuthenticator(string login, string password) : IAuthenticator
+internal class FritzAuthenticator(string login, string password) : IAuthenticator
 {
     public void Authenticate(WebService service, HttpClient client)
     {

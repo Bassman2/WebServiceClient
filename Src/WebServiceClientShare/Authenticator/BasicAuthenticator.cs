@@ -1,6 +1,5 @@
 ﻿namespace WebServiceClient.Authenticator;
 
-
 internal class BasicAuthenticator(string name, string login, string password, Encoding? encoding = null) : IAuthenticator
 {
     public void Authenticate(WebService service, HttpClient client)

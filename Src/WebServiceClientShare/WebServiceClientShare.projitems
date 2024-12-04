@@ -25,7 +25,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XSerializer\XSerializerExtentions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Exceptions\" />
-  </ItemGroup>
 </Project>

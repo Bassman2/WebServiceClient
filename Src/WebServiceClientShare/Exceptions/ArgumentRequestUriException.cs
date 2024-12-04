@@ -9,12 +9,7 @@ public class ArgumentRequestUriException : ArgumentException
     { }
 
 
-#if NET8_0_OR_GREATER
     public static new void ThrowIfNullOrWhiteSpace(string? argument, string? paramName)
-#else
-    public static void ThrowIfNullOrWhiteSpace(string? argument, string? paramName)
-
-#endif
     {
         if (string.IsNullOrWhiteSpace(argument))
         {

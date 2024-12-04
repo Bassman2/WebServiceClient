@@ -1,15 +1,15 @@
 ﻿namespace WebServiceClient;
 
-public class JsonService(Uri host, JsonSerializerContext context, IAuthenticator? authenticator = null) : WebService(host, authenticator)
+public abstract class JsonService : WebService
 {
-    protected readonly JsonSerializerOptions jsonSerializerOptions = new()
+    private readonly JsonSerializerContext context;
+
+    public JsonService(Uri host, JsonSerializerContext context, IAuthenticator? authenticator = null)
+        : base(host, authenticator)
     {
-        TypeInfoResolver = context,
-        Converters =
-        {
-            new JsonDateTimeConverter()
-        }
-    };
+        client!.DefaultRequestHeaders.Add("Accept", "application/json");
+        this.context = context;
+    }
 
     #region Get
         

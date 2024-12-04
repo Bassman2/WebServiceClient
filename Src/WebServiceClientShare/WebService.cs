@@ -1,6 +1,6 @@
 ﻿namespace WebServiceClient;
 
-public class WebService : IDisposable
+public abstract class WebService : IDisposable
 {
     protected internal HttpClient? client;
 
@@ -21,6 +21,7 @@ public class WebService : IDisposable
             Timeout = new TimeSpan(0, 2, 0)
         };
         authenticator?.Authenticate(this, this.client);
+        TestAutentication();
     }
 
     public void Dispose()
@@ -37,17 +38,17 @@ public class WebService : IDisposable
 
     public bool IsConnected => client != null;
 
-    //protected virtual void ErrorHandling(HttpResponseMessage response, string memberName)
-    //{
-    //    string str = response.Content.ReadAsStringAsync().Result;
-    //    throw new WebServiceException(str, response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
-    //}
-
     protected virtual async Task ErrorHandlingAsync(HttpResponseMessage response, string memberName, CancellationToken cancellationToken)
     {
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         throw new WebServiceException(str, response.RequestMessage?.RequestUri, response.StatusCode, response.ReasonPhrase, memberName);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>Throw System.Security.Authentication.AuthenticationException if authentication failed.</remarks>
+    protected abstract void TestAutentication();    
 
     #region Get
 

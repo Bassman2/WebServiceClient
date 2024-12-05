@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\FritzAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\IAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FacadeExtentions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Store\KeyStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XSerializer\IXSerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonConverters\JsonDateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)JsonService.cs" />

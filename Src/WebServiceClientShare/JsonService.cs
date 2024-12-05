@@ -19,7 +19,10 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+
+#if DEBUG
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -39,6 +42,11 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+
+#if DEBUG
+        string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
+#endif   
+
         using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -53,6 +61,11 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+
+#if DEBUG
+        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+#endif   
+
         using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -73,6 +86,11 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+
+#if DEBUG
+        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+#endif       
+
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -88,6 +106,11 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+
+#if DEBUG
+        string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
+#endif  
+
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -139,7 +162,17 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+
+#if DEBUG
+        string req = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+#endif      
+
         using HttpResponseMessage response = await client!.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);

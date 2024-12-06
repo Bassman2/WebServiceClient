@@ -1,5 +1,7 @@
 ﻿namespace WebServiceClient;
 
+// https://www.postman.com/
+
 public abstract class JsonService : WebService
 {
     private readonly JsonSerializerContext context;

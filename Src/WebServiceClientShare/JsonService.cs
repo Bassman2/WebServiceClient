@@ -69,6 +69,11 @@ public abstract class JsonService : WebService
 #endif   
 
         using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -94,6 +99,11 @@ public abstract class JsonService : WebService
 #endif       
 
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -114,6 +124,11 @@ public abstract class JsonService : WebService
 #endif  
 
         using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -126,6 +141,11 @@ public abstract class JsonService : WebService
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.PostAsync(requestUri, null, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -146,6 +166,11 @@ public abstract class JsonService : WebService
         }
 
         using HttpResponseMessage response = await client!.PostAsync(requestUri, req, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);

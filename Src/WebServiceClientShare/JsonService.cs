@@ -108,7 +108,8 @@ public abstract class JsonService : WebService
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
         }
-        return await ReadFromJsonAsync<T2>(response, cancellationToken);
+        var model = await ReadFromJsonAsync<T2>(response, cancellationToken);
+        return model;
     }
 
     protected async Task PostAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")

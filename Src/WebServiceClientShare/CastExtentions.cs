@@ -1,4 +1,5 @@
-﻿namespace WebServiceClient;
+﻿
+namespace WebServiceClient;
 
 internal static class CastExtentions
 {

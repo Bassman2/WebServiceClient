@@ -203,40 +203,40 @@ public abstract class WebService : IDisposable
 
     #region Url Helper
 
-    private static string CombineParameter(params (string Name, string Value)[] values)
+    private static string CombineParameter(params (string Name, object? Value)[] values)
     {
-        string str = values.Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}");
+        string str = values.Where(t => t.Value != null).Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}");
         return str;
     }
-
+    
     protected static string CombineUrl(params string[] urlParts)
     {
         string str = urlParts.Aggregate("/", (a,b) => $"{a.Trim('/')}/{a.Trim('/')}");
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, params (string Name, string Value)[] values)
+    protected static string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
     {
         string par = CombineParameter(values);
         string str = $"/{urlPartA.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, params (string Name, string Value)[] values)
+    protected static string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
     {
         string par = CombineParameter(values);
         string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, string Value)[] values)
+    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
     {
         string par = CombineParameter(values);
         string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, string Value)[] values)
+    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
     {
         string par = CombineParameter(values);
         string str = $"/{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}/{urlPartD.Trim('/')}?{par}".TrimEnd('?');

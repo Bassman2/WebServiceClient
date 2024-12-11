@@ -4,8 +4,12 @@ namespace WebServiceClient;
 
 public static class AsyncEnumerableExtensions
 {
-    public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items, CancellationToken cancellationToken = default)
+    public static async Task<List<T>?> ToListAsync<T>(this IAsyncEnumerable<T>? items, CancellationToken cancellationToken = default)
     {
+        if (items == null)
+        {
+            return null;
+        }
         var results = new List<T>();
         await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
         {
@@ -13,6 +17,16 @@ public static class AsyncEnumerableExtensions
         }
         return results;
     }
+
+    //public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items, CancellationToken cancellationToken = default)
+    //{
+    //    var results = new List<T>();
+    //    await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
+    //    {
+    //        results.Add(item);
+    //    }
+    //    return results;
+    //}
 
     public static IEnumerable<T> ToEnumerable<T>(this IAsyncEnumerable<T> asyncEnumerable)
     {

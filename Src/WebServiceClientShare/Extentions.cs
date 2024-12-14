@@ -49,7 +49,7 @@ internal static class Extentions
 
     #endregion
 
-    #region CastFields
+    #region JsonValue
 
     public static int? GetJsonValueInt(this Dictionary<string, object?>? dict, string key)
     {
@@ -94,11 +94,11 @@ internal static class Extentions
 
     public static T? GetJsonValue<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T,
-        TM>(this Dictionary<string, object?>? dict, string key) where T : class where TM : class
+        TM>(this Dictionary<string, object?>? dict, string key, JsonSerializerContext context) where T : class where TM : class
     {
         if ((dict?.TryGetValue(key, out object? elm) ?? false) && elm != null)
         {
-            JsonTypeInfo<TM> jsonTypeInfo = (JsonTypeInfo<TM>)SourceGenerationContext.Default.GetTypeInfo(typeof(TM))!;
+            JsonTypeInfo<TM> jsonTypeInfo = (JsonTypeInfo<TM>)context.GetTypeInfo(typeof(TM))!;
             var model = JsonSerializer.Deserialize<TM>((JsonElement)elm!, jsonTypeInfo);
             var item = model.CastModel<T>();
             return item;
@@ -108,11 +108,11 @@ internal static class Extentions
 
     public static T? GetJsonValue<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T,
-        TM>(this Dictionary<string, object?>? dict, string key, JiraService service) where T : class where TM : class
+        TM>(this Dictionary<string, object?>? dict, string key, object service, JsonSerializerContext context) where T : class where TM : class
     {
         if ((dict?.TryGetValue(key, out object? elm) ?? false) && elm != null)
         {
-            JsonTypeInfo<TM> jsonTypeInfo = (JsonTypeInfo<TM>)SourceGenerationContext.Default.GetTypeInfo(typeof(TM))!;
+            JsonTypeInfo<TM> jsonTypeInfo = (JsonTypeInfo<TM>)context.GetTypeInfo(typeof(TM))!;
             var model = JsonSerializer.Deserialize<TM>((JsonElement)elm!, jsonTypeInfo);
             var item = model.CastModel<T>(service);
             return item;

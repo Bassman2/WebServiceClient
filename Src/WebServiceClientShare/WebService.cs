@@ -66,7 +66,7 @@ public abstract class WebService : IDisposable
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
-    protected async Task<Stream> GetFromStreamAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<System.IO.Stream> GetFromStreamAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
@@ -77,9 +77,9 @@ public abstract class WebService : IDisposable
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
         }
-        var stream = new MemoryStream();
+        var stream = new System.IO.MemoryStream();
         await response.Content.CopyToAsync(stream, cancellationToken);
-        stream.Seek(0, SeekOrigin.Begin);
+        stream.Seek(0, System.IO.SeekOrigin.Begin);
         return stream;
     }
 
@@ -94,7 +94,7 @@ public abstract class WebService : IDisposable
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
         }
-        using var file = File.Create(filePath);
+        using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
     }
 
@@ -109,7 +109,7 @@ public abstract class WebService : IDisposable
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
         }
-        using var file = File.Create(filePath);
+        using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
     }
 
@@ -129,14 +129,14 @@ public abstract class WebService : IDisposable
         }
     }
 
-    protected async Task PutFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task PutFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
-        foreach (KeyValuePair<string, Stream> file in files)
+        foreach (KeyValuePair<string, System.IO.Stream> file in files)
         {
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }
@@ -164,14 +164,14 @@ public abstract class WebService : IDisposable
         }
     }
 
-    protected async Task PostFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task PostFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
-        foreach (KeyValuePair<string, Stream> file in files)
+        foreach (KeyValuePair<string, System.IO.Stream> file in files)
         {
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }

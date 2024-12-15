@@ -154,14 +154,14 @@ public abstract class JsonService : WebService
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
-    protected async Task<T?> PostFilesFromJsonAsync<T>(string requestUri, IEnumerable<KeyValuePair<string, Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<T?> PostFilesFromJsonAsync<T>(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
-        foreach (KeyValuePair<string, Stream> file in files)
+        foreach (KeyValuePair<string, System.IO.Stream> file in files)
         {
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }

@@ -11,7 +11,7 @@ internal class FritzAuthenticator(string login, string password) : IAuthenticato
         using (HttpResponseMessage response = client.GetAsync("login_sid.lua").Result)
         {
             response.EnsureSuccessStatusCode();
-            Stream stream = response.Content.ReadAsStreamAsync().Result;
+            System.IO.Stream stream = response.Content.ReadAsStreamAsync().Result;
             XDocument doc = XDocument.Load(stream);
             XElement? info = doc.FirstNode as XElement;
             sessionId = info?.Element("SID")?.Value;
@@ -24,7 +24,7 @@ internal class FritzAuthenticator(string login, string password) : IAuthenticato
             string request = $"login_sid.lua?username={login}&response={resp}";
             using HttpResponseMessage response = client.GetAsync(request).Result;
             response.EnsureSuccessStatusCode();
-            Stream stream = response.Content.ReadAsStreamAsync().Result;
+            System.IO.Stream stream = response.Content.ReadAsStreamAsync().Result;
             XDocument doc = XDocument.Load(stream);
             XElement? info = doc.FirstNode as XElement;
             sessionId = info?.Element("SID")?.Value;

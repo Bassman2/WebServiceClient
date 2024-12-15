@@ -71,10 +71,10 @@ public class KeyStore
                             Host = "https://github.com/",
                             Verify = "https://github.com/",
                             Token = "xxxxxxxx",
-                            Login = "mm",
-                            Password = "1234",
                             User = "Max Mustermann",
                             Email = "Max.Mustermann@web.de",
+                            Login = "mm",
+                            Password = "1234",
                             Comment = "Access to Microsoft Github"
                         }
                     }

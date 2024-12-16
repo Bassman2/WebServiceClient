@@ -3,6 +3,7 @@
 public abstract class WebService : IDisposable
 {
     protected internal HttpClient? client;
+    protected virtual string? AuthenticationTestUrl => null;
 
     protected readonly HttpClientHandler httpClientHandler = new()
     {
@@ -48,7 +49,17 @@ public abstract class WebService : IDisposable
     /// 
     /// </summary>
     /// <remarks>Throw System.Security.Authentication.AuthenticationException if authentication failed.</remarks>
-    protected abstract void TestAutentication();    
+    protected void TestAutentication()
+    {
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(AuthenticationTestUrl);
+
+        using HttpResponseMessage response = client!.GetAsync(AuthenticationTestUrl).Result;
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new AuthenticationException("Authentication failed");
+        }
+    }
 
     #region Get
 

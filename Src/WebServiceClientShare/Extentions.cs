@@ -1,4 +1,6 @@
-﻿namespace WebServiceClient;
+﻿using System.Text.RegularExpressions;
+
+namespace WebServiceClient;
 
 internal static class Extentions
 {
@@ -202,6 +204,35 @@ internal static class Extentions
         if (values is null) { return null; }
 
         return values.Select(item => ((T2?)Activator.CreateInstance(typeof(T2), item))!);
+    }
+
+    #endregion
+
+    #region PatternMatch
+
+    internal static IEnumerable<FileModel> WhereMatch(this IEnumerable<FileModel> source, string? pattern)
+    {
+        return source.Where(f => pattern == null || Regex.IsMatch(f.Uri!.ToString().Trim('/'), pattern, RegexOptions.IgnoreCase));
+    }
+
+    internal static string? FilterToRegex(this string? filter)
+    {
+        if (filter == null || filter == "*" || filter == "*.*")
+        {
+            return null;
+        }
+
+        var s = new StringBuilder(filter);
+        s.Replace(".", @"\.");
+        s.Replace("+", @"\+");
+        s.Replace("$", @"\$");
+        s.Replace("(", @"\(");
+        s.Replace(")", @"\)");
+        s.Replace("[", @"\[");
+        s.Replace("]", @"\]");
+        s.Replace("?", ".?");
+        s.Replace("*", ".*");
+        return s.ToString();
     }
 
     #endregion

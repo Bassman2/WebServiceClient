@@ -96,6 +96,24 @@ public abstract class WebService : IDisposable
         return stream;
     }
 
+    protected async Task<bool> FoundAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+        if (!response.IsSuccessStatusCode)
+        {
+            await ErrorHandlingAsync(response, memberName, cancellationToken);
+        }
+        return true;
+    }
+
     protected async Task DownloadAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));

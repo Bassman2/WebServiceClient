@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace WebServiceClient;
+﻿namespace WebServiceClient;
 
 internal static class Extentions
 {
@@ -214,10 +212,10 @@ internal static class Extentions
 
     #region PatternMatch
 
-    internal static IEnumerable<FileModel> WhereMatch(this IEnumerable<FileModel> source, string? pattern)
-    {
-        return source.Where(f => pattern == null || Regex.IsMatch(f.Uri!.ToString().Trim('/'), pattern, RegexOptions.IgnoreCase));
-    }
+    //internal static IEnumerable<FileModel> WhereMatch(this IEnumerable<FileModel> source, string? pattern)
+    //{
+    //    return source.Where(f => pattern == null || Regex.IsMatch(f.Uri!.ToString().Trim('/'), pattern, RegexOptions.IgnoreCase));
+    //}
 
     internal static string? FilterToRegex(this string? filter)
     {

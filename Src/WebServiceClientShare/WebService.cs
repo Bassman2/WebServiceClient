@@ -244,7 +244,17 @@ public abstract class WebService : IDisposable
     // ("Name", "value"     
     private static string CombineParameter(params (string Name, object? Value)[] values)
     {
-        string str = values.Where(t => t.Value != null).Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).Aggregate("", (a, b) => $"{a}&{b}").Trim('&');
+        string str = values.
+            Where(t => t.Value != null).
+            //Select(static t => (t.Name, Value: t.Value!.GetType().Name switch
+            //    {
+            //        "Bool" => t.Value.ToString()?.ToLower(),
+            //        "String" => t.Value.ToString(),
+            //        _ => throw new Exception(t.Value.GetType().Name)
+            //    }
+            //)).
+            Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).
+            Aggregate("", (a, b) => $"{a}&{b}").Trim('&');
         return str;
     }
     

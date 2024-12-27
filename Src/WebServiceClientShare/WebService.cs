@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebServiceClient;
+﻿namespace WebServiceClient;
 
 public abstract class WebService : IDisposable
 {
@@ -239,59 +237,86 @@ public abstract class WebService : IDisposable
 
     #region Url Helper
 
-    // ("Name", null)       => empty
-    // ("Name", "")         => "Name"
-    // ("Name", "value"     
-    private static string CombineParameter(params (string Name, object? Value)[] values)
+    // Nothing : ("Name", null)     => ""
+    // Command : ("Name", "")       => "Name"
+    // Empty   : ("Name=", " ")      => "Name="    
+    // Value   : ("Name", value)    => "Name=Value"
+    // Bool    : ("Name", bool)     =>  "Name={true/fals}"  
+
+    private static string QueryEntry((string Name, object? Value) entry)
     {
-        string str = values.
-            Where(t => t.Value != null).
-            //Select(static t => (t.Name, Value: t.Value!.GetType().Name switch
-            //    {
-            //        "Bool" => t.Value.ToString()?.ToLower(),
-            //        "String" => t.Value.ToString(),
-            //        _ => throw new Exception(t.Value.GetType().Name)
-            //    }
-            //)).
-            Select(t => $"{t.Name}={t.Value}".TrimEnd('=')).
-            Aggregate("", (a, b) => $"{a}&{b}").Trim('&');
+        string? typeName = entry.Value?.GetType().Name; 
+        switch (typeName)
+        {
+        case "Boolean": return $"{entry.Name}={entry.Value?.ToString()?.ToLower()}".TrimEnd('=');
+        }
+        //Select(static t => (t.Name, Value: t.Value!.GetType().Name switch
+        //    {
+        //        "Bool" => t.Value.ToString()?.ToLower(),
+        //        "String" => t.Value.ToString(),
+        //        _ => throw new Exception(t.Value.GetType().Name)
+        //    }
+        //)).
+
+        return $"{entry.Name}={entry.Value}".TrimEnd('=').Trim(' ');
+    }
+    private static string CombineQuery(params (string Name, object? Value)[] values)
+    {
+        //string str = values.
+        //    Where(t => t.Value != null).            
+        //    Select(t => QueryEntry(t)).
+        //    Aggregate("", (a, b) => $"{a}&{b}").Trim('&');
+        string str = string.Join('&', values.Where(t => t.Value != null).Select(t => QueryEntry(t)));
         return str;
     }
-    
-    protected static string CombineUrl(params string[] urlParts)
+    private static string CombineInt(params string[] urlParts)
     {
-        string str = urlParts.Aggregate("/", (a,b) => $"{a.Trim('/')}/{a.Trim('/')}");
+        string str = string.Join('/', urlParts.Select(p => p.Trim('/')));
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
+    public static string CombineUrl(params string[] urlParts)
     {
-        string par = CombineParameter(values);
-        string url = $"{urlPartA.Trim('/')}".Trim('/');
+        string str = CombineInt(urlParts); 
+        return str;
+    }
+
+    public static string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
+    {
+        string par = CombineQuery(values);
+        string url = CombineInt(urlPartA);
         string str = $"/{url}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
+    public static string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
     {
-        string par = CombineParameter(values);
-        string url = $"{urlPartA.Trim('/')}/{urlPartB.Trim('/')}".Trim('/');
+        string par = CombineQuery(values);
+        string url = CombineInt(urlPartA, urlPartB);
         string str = $"/{url}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
+    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
     {
-        string par = CombineParameter(values);
-        string url = $"{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}".Trim('/');
+        string par = CombineQuery(values);
+        string url = CombineInt(urlPartA, urlPartB, urlPartC);
         string str = $"/{url}?{par}".TrimEnd('?');
         return str;
     }
 
-    protected static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
+    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
     {
-        string par = CombineParameter(values);
-        string url = $"{urlPartA.Trim('/')}/{urlPartB.Trim('/')}/{urlPartC.Trim('/')}/{urlPartD.Trim('/')}".Trim('/');
+        string par = CombineQuery(values);
+        string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD);
+        string str = $"/{url}?{par}".TrimEnd('?');
+        return str;
+    }
+
+    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, string urlPartE, params (string Name, object? Value)[] values)
+    {
+        string par = CombineQuery(values);
+        string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD, urlPartE);
         string str = $"/{url}?{par}".TrimEnd('?');
         return str;
     }

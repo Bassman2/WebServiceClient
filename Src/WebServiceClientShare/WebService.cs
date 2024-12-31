@@ -152,6 +152,11 @@ public abstract class WebService : IDisposable
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.PutAsync(requestUri, content, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -171,6 +176,11 @@ public abstract class WebService : IDisposable
         }
 
         using HttpResponseMessage response = await client!.PutAsync(requestUri, req, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);

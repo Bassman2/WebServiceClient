@@ -22,7 +22,10 @@ public abstract class WebService : IDisposable
             Timeout = new TimeSpan(0, 2, 0)
         };
         authenticator?.Authenticate(this, this.client);
-        TestAutentication();
+        if (AuthenticationTestUrl != null)
+        {
+            TestAutentication();
+        }
     }
 
     public void Dispose()

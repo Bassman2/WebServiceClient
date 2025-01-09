@@ -6,10 +6,11 @@ public abstract class JsonService : WebService
 {
     private readonly JsonSerializerContext context;
 
-    public JsonService(Uri host, JsonSerializerContext context, IAuthenticator? authenticator = null)
-        : base(host, authenticator)
+    public JsonService(Uri host, IAuthenticator? authenticator, string appName, JsonSerializerContext context)
+        : base(host, authenticator, appName)
     {
         client!.DefaultRequestHeaders.Add("Accept", "application/json");
+        client!.DefaultRequestHeaders.Add("User-Agent", appName);
         this.context = context;
     }
 

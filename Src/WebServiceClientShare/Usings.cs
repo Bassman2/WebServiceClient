@@ -23,4 +23,5 @@ global using System.Xml.Serialization;
 
 global using WebServiceClient.Authenticator;
 global using WebServiceClient.JsonConverters;
+global using WebServiceClient.Store;
 

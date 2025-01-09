@@ -13,7 +13,7 @@ public abstract class WebService : IDisposable
         ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
     };
 
-    public WebService(Uri host, IAuthenticator? authenticator = null)
+    public WebService(Uri host, IAuthenticator? authenticator = null, string? appName = null)
     {
         this.Host = host;
         this.client = new HttpClient(httpClientHandler)
@@ -21,6 +21,7 @@ public abstract class WebService : IDisposable
             BaseAddress = host,
             Timeout = new TimeSpan(0, 2, 0)
         };
+        client!.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
         authenticator?.Authenticate(this, this.client);
         if (AuthenticationTestUrl != null)
         {

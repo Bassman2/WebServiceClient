@@ -9,6 +9,7 @@
     <Import_RootNamespace>WebServiceClient</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ArgumentRequestUriException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\ApiKeyAuthenticator.cs" />

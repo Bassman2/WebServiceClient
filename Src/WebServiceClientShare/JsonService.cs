@@ -182,6 +182,41 @@ public abstract class JsonService : WebService
 
     #endregion
 
+    #region Delete
+
+    protected async Task<T2?> DeleteJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
+        WebServiceException.ThrowIfNullOrNotConnected(this);
+
+        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+
+        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+
+        HttpRequestMessage requestMessage = new(HttpMethod.Delete, requestUri)
+        {
+            Content = new StringContent(str, Encoding.UTF8)
+        };
+
+        using HttpResponseMessage response = await client!.SendAsync(requestMessage, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ErrorHandlingAsync(response, memberName, cancellationToken);
+        }
+
+        return await ReadFromJsonAsync<T2>(response, cancellationToken);
+    }
+
+
+    #endregion
+
+
     #region PATCH
 
     protected async Task<T2?> PatchAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")

@@ -21,6 +21,9 @@ public class KeyStore
     [JsonPropertyName("verify")]
     public string? Verify { get; set; }
 
+    [JsonPropertyName("authentication")]
+    public AuthenticationType Authentication { get; set; }
+
     [JsonPropertyName("token")]
     public string? Token { get; set; }
 

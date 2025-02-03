@@ -299,7 +299,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA);
-        string str = $"/{url}?{par}".TrimEnd('?');
+        string str = url.Contains('?') ? $"/{url}&{par}".TrimEnd('&') : $"/{url}?{par}".TrimEnd('?');
         return str;
     }
 

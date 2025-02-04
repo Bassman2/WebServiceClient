@@ -9,12 +9,13 @@ internal static class Extentions
 
     public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value) where T : class
     {
-        return value is not null ? (T?)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [value], null) : null;
+        var x = value !?? throw new ArgumentNullException(nameof(value));
+        return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 
     public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value, object service) where T : class
     {
-        return value is not null ? (T?)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value], null) : null;
+        return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 
     //public static IEnumerable<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value) where T : class
@@ -54,40 +55,43 @@ internal static class Extentions
 
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value) where T : class
     {
-        return value == null ? null : CastModelIntern<T>(value);
+        //return value == null ? null : CastModelIntern<T>(value);
+
+        return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"))).ToList<T>();
     }
 
-    private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value) where T : class
-    {
-        return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null)!).ToList<T>();
-        //foreach (var item in value)
-        //{
-        //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [item], null);
-        //    if (inst != null)
-        //    {
-        //        yield return (T)inst;
-        //    }
-        //}
-    }
+    //private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value) where T : class
+    //{
+    //    return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null)!).ToList<T>();
+    //    //foreach (var item in value)
+    //    //{
+    //    //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [item], null);
+    //    //    if (inst != null)
+    //    //    {
+    //    //        yield return (T)inst;
+    //    //    }
+    //    //}
+    //}
 
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value, object service) where T : class
     {
-        return value == null ? null : CastModelIntern<T>(value, service);
+        //return value == null ? null : CastModelIntern<T>(value, service);
+        return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null) ?? throw new ArgumentException($"CastModel with service failed for {typeof(T).Name}!"))).ToList<T>();
     }
 
-    private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value, object service) where T : class
-    {
-        return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null)!).ToList<T>();
+    //private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value, object service) where T : class
+    //{
+    //    return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null)!).ToList<T>();
 
-        //foreach (var item in value)
-        //{
-        //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, item], null);
-        //    if (inst != null)
-        //    {
-        //        yield return (T)inst;
-        //    }
-        //}
-    }
+    //    //foreach (var item in value)
+    //    //{
+    //    //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, item], null);
+    //    //    if (inst != null)
+    //    //    {
+    //    //        yield return (T)inst;
+    //    //    }
+    //    //}
+    //}
 
     #endregion
 

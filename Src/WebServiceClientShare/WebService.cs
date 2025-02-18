@@ -1,10 +1,23 @@
 ﻿namespace WebServiceClient;
 
+/// <summary>
+/// Represents an abstract base class for web services, providing common functionality for HTTP operations and authentication.
+/// </summary>
 public abstract class WebService : IDisposable
 {
+    /// <summary>
+    /// The HTTP client used for making requests.
+    /// </summary>
     protected internal HttpClient? client;
+
+    /// <summary>
+    /// The URL used to test authentication, can be overridden by derived classes.
+    /// </summary>
     protected virtual string? AuthenticationTestUrl => null;
 
+    /// <summary>
+    /// The HTTP client handler with custom settings.
+    /// </summary>
     protected readonly HttpClientHandler httpClientHandler = new()
     {
         CookieContainer = new System.Net.CookieContainer(),
@@ -13,6 +26,12 @@ public abstract class WebService : IDisposable
         ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
     };
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WebService"/> class with the specified host, authenticator, and application name.
+    /// </summary>
+    /// <param name="host">The base URI of the web service.</param>
+    /// <param name="authenticator">The authenticator used to authenticate the web service client.</param>
+    /// <param name="appName">The name of the application.</param>
     public WebService(Uri host, IAuthenticator? authenticator = null, string? appName = null)
     {
         this.Host = host;
@@ -29,6 +48,9 @@ public abstract class WebService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Releases the resources used by the <see cref="WebService"/> class.
+    /// </summary>
     public void Dispose()
     {
         if (client != null)
@@ -39,10 +61,23 @@ public abstract class WebService : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Gets the base URI of the web service.
+    /// </summary>
     public Uri Host { get; }
 
+    /// <summary>
+    /// Gets a value indicating whether the web service is connected.
+    /// </summary>
     public bool IsConnected => client != null;
 
+    /// <summary>
+    /// Handles errors in HTTP responses.
+    /// </summary>
+    /// <param name="response">The HTTP response message.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected virtual async Task ErrorHandlingAsync(HttpResponseMessage response, string memberName, CancellationToken cancellationToken)
     {
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -50,9 +85,9 @@ public abstract class WebService : IDisposable
     }
 
     /// <summary>
-    /// 
+    /// Tests the authentication by sending a request to the <see cref="AuthenticationTestUrl"/>.
     /// </summary>
-    /// <remarks>Throw System.Security.Authentication.AuthenticationException if authentication failed.</remarks>
+    /// <remarks>Throws <see cref="System.Security.Authentication.AuthenticationException"/> if authentication fails.</remarks>
     protected void TestAutentication()
     {
         WebServiceException.ThrowIfNullOrNotConnected(this);
@@ -67,6 +102,13 @@ public abstract class WebService : IDisposable
 
     #region Get
 
+    /// <summary>
+    /// Sends a GET request to the specified URI and returns the response body as a string.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the response body as a string.</returns>
     protected async Task<string?> GetStringAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -81,6 +123,13 @@ public abstract class WebService : IDisposable
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a GET request to the specified URI and returns the response body as a stream.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the response body as a stream.</returns>
     protected async Task<System.IO.Stream> GetFromStreamAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -98,6 +147,13 @@ public abstract class WebService : IDisposable
         return stream;
     }
 
+    /// <summary>
+    /// Sends a GET request to the specified URI and returns a value indicating whether the resource was found.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a value indicating whether the resource was found.</returns>
     protected async Task<bool> FoundAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -116,6 +172,14 @@ public abstract class WebService : IDisposable
         return true;
     }
 
+    /// <summary>
+    /// Sends a GET request to the specified URI and downloads the response body to the specified file path.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="filePath">The file path to save the response body.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task DownloadAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -131,6 +195,14 @@ public abstract class WebService : IDisposable
         await response.Content.CopyToAsync(file, cancellationToken);
     }
 
+    /// <summary>
+    /// Sends a GET request to the specified URI and downloads the response body to the specified file path.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="filePath">The file path to save the response body.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task DownloadAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -150,6 +222,14 @@ public abstract class WebService : IDisposable
 
     #region Put
 
+    /// <summary>
+    /// Sends a PUT request to the specified URI with the provided content.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="content">The HTTP content to send.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task PutAsync(string requestUri, HttpContent content, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -167,6 +247,14 @@ public abstract class WebService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sends a PUT request to the specified URI with the provided files.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="files">The files to send.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task PutFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -195,6 +283,13 @@ public abstract class WebService : IDisposable
 
     #region Post
 
+    /// <summary>
+    /// Sends a POST request to the specified URI.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task PostAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -212,6 +307,14 @@ public abstract class WebService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Sends a POST request to the specified URI with the provided files.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="files">The files to send.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task PostFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -235,6 +338,13 @@ public abstract class WebService : IDisposable
 
     #region Delete
 
+    /// <summary>
+    /// Sends a DELETE request to the specified URI.
+    /// </summary>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task DeleteAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
@@ -257,6 +367,11 @@ public abstract class WebService : IDisposable
     // Value   : ("Name", value)    => "Name=Value"
     // Bool    : ("Name", bool)     =>  "Name={true/fals}"  
 
+    /// <summary>
+    /// Creates a query string entry from the specified name and value.
+    /// </summary>
+    /// <param name="entry">The name and value pair.</param>
+    /// <returns>The query string entry.</returns>
     private static string QueryEntry((string Name, object? Value) entry)
     {
         string? typeName = entry.Value?.GetType().Name; 
@@ -274,6 +389,12 @@ public abstract class WebService : IDisposable
 
         return $"{entry.Name}={entry.Value}".TrimEnd('=').Trim(' ');
     }
+    
+    /// <summary>
+    /// Combines the specified name and value pairs into a query string.
+    /// </summary>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined query string.</returns>
     private static string CombineQuery(params (string Name, object? Value)[] values)
     {
         //string str = values.
@@ -283,18 +404,35 @@ public abstract class WebService : IDisposable
         string str = string.Join('&', values.Where(t => t.Value != null).Select(t => QueryEntry(t)));
         return str;
     }
+
+    /// <summary>
+    /// Combines the specified URL parts into a single URL.
+    /// </summary>
+    /// <param name="urlParts">The URL parts.</param>
+    /// <returns>The combined URL.</returns>
     private static string CombineInt(params string[] urlParts)
     {
         string str = string.Join('/', urlParts.Select(p => p.Trim('/')));
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL parts into a single URL.
+    /// </summary>
+    /// <param name="urlParts">The URL parts.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(params string[] urlParts)
     {
         string str = CombineInt(urlParts); 
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL part and name-value pairs into a single URL.
+    /// </summary>
+    /// <param name="urlPartA">The URL part.</param>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
@@ -303,6 +441,13 @@ public abstract class WebService : IDisposable
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL parts and name-value pairs into a single URL.
+    /// </summary>
+    /// <param name="urlPartA">The first URL part.</param>
+    /// <param name="urlPartB">The second URL part.</param>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
@@ -311,6 +456,14 @@ public abstract class WebService : IDisposable
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL parts and name-value pairs into a single URL.
+    /// </summary>
+    /// <param name="urlPartA">The first URL part.</param>
+    /// <param name="urlPartB">The second URL part.</param>
+    /// <param name="urlPartC">The third URL part.</param>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
@@ -319,6 +472,15 @@ public abstract class WebService : IDisposable
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL parts and name-value pairs into a single URL.
+    /// </summary>
+    /// <param name="urlPartA">The first URL part.</param>
+    /// <param name="urlPartB">The second URL part.</param>
+    /// <param name="urlPartC">The third URL part.</param>
+    /// <param name="urlPartD">The fourth URL part.</param>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
@@ -327,6 +489,16 @@ public abstract class WebService : IDisposable
         return str;
     }
 
+    /// <summary>
+    /// Combines the specified URL parts and name-value pairs into a single URL.
+    /// </summary>
+    /// <param name="urlPartA">The first URL part.</param>
+    /// <param name="urlPartB">The second URL part.</param>
+    /// <param name="urlPartC">The third URL part.</param>
+    /// <param name="urlPartD">The fourth URL part.</param>
+    /// <param name="urlPartE">The fifth URL part.</param>
+    /// <param name="values">The name and value pairs.</param>
+    /// <returns>The combined URL.</returns>
     public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, string urlPartE, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);

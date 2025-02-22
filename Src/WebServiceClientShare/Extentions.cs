@@ -17,6 +17,11 @@ internal static class Extentions
         return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 
+    public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value, object service, object param) where T : class
+    {
+        return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value, param], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
+    }
+
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value) where T : class
     {
         return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"))).ToList<T>();

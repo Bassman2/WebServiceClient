@@ -9,7 +9,7 @@ internal static class Extentions
 
     public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value) where T : class
     {
-        //var x = value !?? throw new ArgumentNullException(nameof(value));
+        var x = value !?? throw new ArgumentNullException(nameof(value));
         return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 
@@ -18,80 +18,20 @@ internal static class Extentions
         return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 
-    //public static IEnumerable<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value) where T : class
-    //{
-    //    return value == null ? null : CastModelIntern<T>(value);
-    //}
-
-    //private static IEnumerable<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value) where T : class
-    //{
-
-    //    foreach (var item in value)
-    //    {
-    //        var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [item], null);
-    //        if (inst != null)
-    //        {
-    //            yield return (T)inst;
-    //        }
-    //    }
-    //}
-
-    //public static IEnumerable<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value, object service) where T : class
-    //{
-    //    return value == null ? null : CastModelIntern<T>(value, service);
-    //}
-
-    //private static IEnumerable<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value, object service) where T : class
-    //{
-    //    foreach (var item in value)
-    //    {
-    //        var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, item], null);
-    //        if (inst != null)
-    //        {
-    //            yield return (T)inst;
-    //        }
-    //    }
-    //}
+    public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value, object service, object param) where T : class
+    {
+        return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, value, param], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
+    }
 
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value) where T : class
     {
-        //return value == null ? null : CastModelIntern<T>(value);
-
         return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"))).ToList<T>();
     }
 
-    //private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value) where T : class
-    //{
-    //    return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [i], null)!).ToList<T>();
-    //    //foreach (var item in value)
-    //    //{
-    //    //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [item], null);
-    //    //    if (inst != null)
-    //    //    {
-    //    //        yield return (T)inst;
-    //    //    }
-    //    //}
-    //}
-
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value, object service) where T : class
     {
-        //return value == null ? null : CastModelIntern<T>(value, service);
         return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null) ?? throw new ArgumentException($"CastModel with service failed for {typeof(T).Name}!"))).ToList<T>();
     }
-
-    //private static List<T> CastModelIntern<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable value, object service) where T : class
-    //{
-    //    return value.Cast<object>().Select(i => (T)Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null)!).ToList<T>();
-
-    //    //foreach (var item in value)
-    //    //{
-    //    //    var inst = Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, item], null);
-    //    //    if (inst != null)
-    //    //    {
-    //    //        yield return (T)inst;
-    //    //    }
-    //    //}
-    //}
 
     #endregion
 
@@ -170,19 +110,19 @@ internal static class Extentions
 
     #region IAsyncEnumerable
 
-    public static async Task<List<T>?> ToListAsync<T>(this IAsyncEnumerable<T>? items, CancellationToken cancellationToken = default)
-    {
-        if (items == null)
-        {
-            return null;
-        }
-        var results = new List<T>();
-        await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
-        {
-            results.Add(item);
-        }
-        return results;
-    }
+    //public static async Task<List<T>?> ToListAsync<T>(this IAsyncEnumerable<T>? items, CancellationToken cancellationToken = default)
+    //{
+    //    if (items == null)
+    //    {
+    //        return null;
+    //    }
+    //    var results = new List<T>();
+    //    await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
+    //    {
+    //        results.Add(item);
+    //    }
+    //    return results;
+    //}
 
     //public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items, CancellationToken cancellationToken = default)
     //{
@@ -194,27 +134,27 @@ internal static class Extentions
     //    return results;
     //}
 
-    public static IEnumerable<T> ToEnumerable<T>(this IAsyncEnumerable<T> asyncEnumerable)
-    {
-        var list = new BlockingCollection<T>();
+    //public static IEnumerable<T> ToEnumerable<T>(this IAsyncEnumerable<T> asyncEnumerable)
+    //{
+    //    var list = new BlockingCollection<T>();
 
-        async Task AsyncIterate()
-        {
-            await foreach (var item in asyncEnumerable)
-            {
-                list.Add(item);
-            }
+    //    async Task AsyncIterate()
+    //    {
+    //        await foreach (var item in asyncEnumerable)
+    //        {
+    //            list.Add(item);
+    //        }
 
-            list.CompleteAdding();
-        }
+    //        list.CompleteAdding();
+    //    }
 
-        _ = AsyncIterate();
+    //    _ = AsyncIterate();
 
-        return list.GetConsumingEnumerable();
-    }
+    //    return list.GetConsumingEnumerable();
+    //}
 
-    public static List<T> ToList<T>(this IAsyncEnumerable<T> asyncEnumerable)
-        => asyncEnumerable.ToEnumerable().ToList();
+    //public static List<T> ToList<T>(this IAsyncEnumerable<T> asyncEnumerable)
+    //    => asyncEnumerable.ToEnumerable().ToList();
 
 
     //public static async IAsyncEnumerable<T2> CastList<T1, T2>(this IAsyncEnumerable<T1> items, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -226,31 +166,7 @@ internal static class Extentions
     //}
 
     #endregion
-
-    #region Facade
-
-    //public static T? Facade<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value) where T : class
-    //{
-    //    if (value is null) { return null; }
-
-    //    return (T?)Activator.CreateInstance(typeof(T), value);
-    //}
-
-    //public static T2? Facade<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2>(this T1? value) where T1 : class where T2 : class
-    //{
-    //    if (value is null) { return null; }
-
-    //    return (T2?)Activator.CreateInstance(typeof(T2), value);
-    //}
-
-    //public static IEnumerable<T2>? Facade<T1, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2>(this IEnumerable<T1>? values) where T1 : class where T2 : class
-    //{
-    //    if (values is null) { return null; }
-
-    //    return values.Select(item => ((T2?)Activator.CreateInstance(typeof(T2), item))!);
-    //}
-
-    #endregion
+       
 
     #region PatternMatch
 

@@ -42,6 +42,12 @@ public class KeyStore
     [JsonPropertyName("comment")]
     public string? Comment { get; set; }
 
+    /// <summary>
+    /// Url to token update page.
+    /// </summary>
+    [JsonPropertyName("update")]
+    public string? Update { get; set; }
+
     public static KeyStore? Key(string name)
     {
         if (items == null)

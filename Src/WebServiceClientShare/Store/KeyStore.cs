@@ -42,6 +42,9 @@ public class KeyStore
     [JsonPropertyName("token")]
     public string? Token { get; set; }
 
+    [JsonPropertyName("tokenexpire")]
+    public DateTime? TokenExpire { get; set; }
+
     /// <summary>
     /// Gets or sets the user name.
     /// </summary>
@@ -103,6 +106,7 @@ public class KeyStore
                             Host = "https://www.atlassian.com/",
                             Verify = "https://www.atlassian.com/",
                             Token = "xxxxxxxx",
+                            TokenExpire = DateTime.Now,
                             User = "Max Mustermann",
                             Email = "Max.Mustermann@web.de",
                             Login = "mm",
@@ -115,6 +119,7 @@ public class KeyStore
                             Host = "https://github.com/",
                             Verify = "https://github.com/",
                             Token = "xxxxxxxx",
+                            TokenExpire = DateTime.Now,
                             User = "Max Mustermann",
                             Email = "Max.Mustermann@web.de",
                             Login = "mm",

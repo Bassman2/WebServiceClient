@@ -9,7 +9,6 @@ internal static class Extentions
 
     public static T? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this object? value) where T : class
     {
-        var x = value !?? throw new ArgumentNullException(nameof(value));
         return value is null ? null : (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [value], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T).Name}!"));
     }
 

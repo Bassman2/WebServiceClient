@@ -47,7 +47,8 @@ public abstract class JsonService : WebService
             await ErrorHandlingAsync(response, memberName, cancellationToken);
         }
 
-        return await ReadFromJsonAsync<T>(response, cancellationToken);
+        var res = await ReadFromJsonAsync<T>(response, cancellationToken);
+        return res;
     }
 
     #endregion
@@ -350,7 +351,15 @@ public abstract class JsonService : WebService
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        return (T?) await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
+        //try
+        //{
+            var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
+            return res;
+        //}
+        //catch(Exception e)
+        //{
+        //    throw;
+        //}
     }
 
     #endregion

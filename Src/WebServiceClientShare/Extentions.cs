@@ -1,4 +1,6 @@
-﻿namespace WebServiceClient;
+﻿using System.Collections.Generic;
+
+namespace WebServiceClient;
 
 internal static class Extentions
 {
@@ -30,6 +32,14 @@ internal static class Extentions
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value, object service) where T : class
     {
         return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null) ?? throw new ArgumentException($"CastModel with service failed for {typeof(T).Name}!"))).ToList<T>();
+    }
+
+    public static async IAsyncEnumerable<T1> CastModelAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T1, T2>(this IAsyncEnumerable<T2> value) where T2 : class where T1 : class
+    {
+        await foreach (var item in value)
+        {
+            yield return (T1)(Activator.CreateInstance(typeof(T1), ConstructorDefault, null, [item], null) ?? throw new ArgumentException($"CastModel failed for {typeof(T1).Name}!"));
+        }
     }
 
     #endregion

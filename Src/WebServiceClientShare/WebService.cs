@@ -72,6 +72,25 @@ public abstract class WebService : IDisposable
     public bool IsConnected => client != null;
 
     /// <summary>
+    /// Checks the HTTP response for errors and handles them if any are found.
+    /// </summary>
+    /// <param name="response">The HTTP response message to check for errors.</param>
+    /// <param name="memberName">The name of the calling member. This is automatically set by the compiler.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <remarks>
+    /// If the response indicates a failure, this method calls <see cref="ErrorHandlingAsync"/> to handle the error.
+    /// Override if the error handling needs to be customized.
+    /// </remarks>
+    protected virtual async Task ErrorCheckAsync(HttpResponseMessage response, string memberName, CancellationToken cancellationToken)
+    {
+        if (!response.IsSuccessStatusCode)
+        {
+            await ErrorHandlingAsync(response, memberName, cancellationToken);
+        }
+    }
+
+    /// <summary>
     /// Handles errors in HTTP responses.
     /// </summary>
     /// <param name="response">The HTTP response message.</param>
@@ -116,10 +135,7 @@ public abstract class WebService : IDisposable
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
         return await response.Content.ReadAsStringAsync(cancellationToken);
     }
 
@@ -137,10 +153,7 @@ public abstract class WebService : IDisposable
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
         var stream = new System.IO.MemoryStream();
         await response.Content.CopyToAsync(stream, cancellationToken);
         stream.Seek(0, System.IO.SeekOrigin.Begin);
@@ -165,10 +178,7 @@ public abstract class WebService : IDisposable
         {
             return false;
         }
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
         return true;
     }
 
@@ -187,10 +197,7 @@ public abstract class WebService : IDisposable
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
         using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
     }
@@ -210,10 +217,7 @@ public abstract class WebService : IDisposable
 
         using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
         using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
     }
@@ -241,10 +245,7 @@ public abstract class WebService : IDisposable
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     /// <summary>
@@ -273,10 +274,7 @@ public abstract class WebService : IDisposable
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     #endregion
@@ -300,11 +298,7 @@ public abstract class WebService : IDisposable
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
-
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     /// <summary>
@@ -328,10 +322,7 @@ public abstract class WebService : IDisposable
         }
 
         using HttpResponseMessage response = await client!.PostAsync(requestUri, req, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     #endregion
@@ -351,10 +342,7 @@ public abstract class WebService : IDisposable
         WebServiceException.ThrowIfNullOrNotConnected(this);
 
         using HttpResponseMessage response = await client!.DeleteAsync(requestUri, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     #endregion

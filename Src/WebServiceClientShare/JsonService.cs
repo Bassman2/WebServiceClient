@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class JsonService : WebService
 {
-    private readonly JsonSerializerContext context;
+    protected JsonSerializerContext context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonService"/> class with the specified host, authenticator, application name, and JSON serializer context.
@@ -42,10 +42,8 @@ public abstract class JsonService : WebService
 #if DEBUG
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+
+        await ErrorCheckAsync(response, memberName, cancellationToken);
 
         var res = await ReadFromJsonAsync<T>(response, cancellationToken);
         return res;
@@ -151,10 +149,8 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+
         var model = await ReadFromJsonAsync<T2>(response, cancellationToken);
         return model;
     }
@@ -186,10 +182,7 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     /// <summary>
@@ -211,10 +204,8 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
@@ -245,10 +236,8 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+
         return await ReadFromJsonAsync<T>(response, cancellationToken);
     }
 
@@ -287,10 +276,7 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
 
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
@@ -329,10 +315,7 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
 
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
         //return (T2?)await response.Content.ReadFromJsonAsync(typeof(T2), context, cancellationToken);
@@ -353,8 +336,14 @@ public abstract class JsonService : WebService
     {
         //try
         //{
-            var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
-            return res;
+        var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
+
+        //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+
+        
+
+        //var res = (T?)await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
+        return res;
         //}
         //catch(Exception e)
         //{
@@ -362,6 +351,15 @@ public abstract class JsonService : WebService
         //}
     }
 
+    /*
+    private static async Task<object?> ReadFromJsonAsyncCore(HttpContent content, Type type, JsonSerializerContext context, CancellationToken cancellationToken)
+    {
+        using (Stream contentStream = await GetContentStreamAsync(content, cancellationToken).ConfigureAwait(false))
+        {
+            return await JsonSerializer.DeserializeAsync(contentStream, type, context, cancellationToken).ConfigureAwait(false);
+        }
+    }
+    */
     #endregion
 }
 

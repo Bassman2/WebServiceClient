@@ -166,11 +166,11 @@ internal static class Extentions
     //    => asyncEnumerable.ToEnumerable().ToList();
 
 
-    //public static async IAsyncEnumerable<T2> CastList<T1, T2>(this IAsyncEnumerable<T1> items, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    //public static async IAsyncEnumerable<OUT> CastList<IN, OUT>(this IAsyncEnumerable<IN> items, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     //{
     //    await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
     //    {
-    //        yield return (T2)item!;
+    //        yield return (OUT)item!;
     //    }
     //}
 

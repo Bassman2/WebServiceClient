@@ -40,7 +40,8 @@ public abstract class WebService : IDisposable
             BaseAddress = host,
             Timeout = new TimeSpan(0, 2, 0)
         };
-        client!.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
+        WebServiceException.ThrowIfNotConnected(client);
+        client.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
         authenticator?.Authenticate(this, this.client);
         if (AuthenticationTestUrl != null)
         {
@@ -109,10 +110,10 @@ public abstract class WebService : IDisposable
     /// <remarks>Throws <see cref="System.Security.Authentication.AuthenticationException"/> if authentication fails.</remarks>
     protected void TestAutentication()
     {
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(AuthenticationTestUrl);
 
-        using HttpResponseMessage response = client!.GetAsync(AuthenticationTestUrl).Result;
+        using HttpResponseMessage response = client.GetAsync(AuthenticationTestUrl).Result;
         if (!response.IsSuccessStatusCode)
         {
             throw new AuthenticationException("Authentication failed");
@@ -131,9 +132,9 @@ public abstract class WebService : IDisposable
     protected async Task<string?> GetStringAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
         return await response.Content.ReadAsStringAsync(cancellationToken);
@@ -149,9 +150,9 @@ public abstract class WebService : IDisposable
     protected async Task<System.IO.Stream> GetFromStreamAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
         var stream = new System.IO.MemoryStream();
@@ -170,9 +171,9 @@ public abstract class WebService : IDisposable
     protected async Task<bool> FoundAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
@@ -193,9 +194,9 @@ public abstract class WebService : IDisposable
     protected async Task DownloadAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
         using var file = System.IO.File.Create(filePath);
@@ -213,9 +214,9 @@ public abstract class WebService : IDisposable
     protected async Task DownloadAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
         using var file = System.IO.File.Create(filePath);
@@ -237,9 +238,9 @@ public abstract class WebService : IDisposable
     protected async Task PutAsync(string requestUri, HttpContent content, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.PutAsync(requestUri, content, cancellationToken);
+        using HttpResponseMessage response = await client.PutAsync(requestUri, content, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -259,7 +260,7 @@ public abstract class WebService : IDisposable
     protected async Task PutFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
@@ -268,7 +269,7 @@ public abstract class WebService : IDisposable
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }
 
-        using HttpResponseMessage response = await client!.PutAsync(requestUri, req, cancellationToken);
+        using HttpResponseMessage response = await client.PutAsync(requestUri, req, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -291,9 +292,9 @@ public abstract class WebService : IDisposable
     protected async Task PostAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.PostAsync(requestUri, null, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsync(requestUri, null, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -312,7 +313,7 @@ public abstract class WebService : IDisposable
     protected async Task PostFilesAsync(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
@@ -321,7 +322,7 @@ public abstract class WebService : IDisposable
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }
 
-        using HttpResponseMessage response = await client!.PostAsync(requestUri, req, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsync(requestUri, req, cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
@@ -339,9 +340,9 @@ public abstract class WebService : IDisposable
     protected async Task DeleteAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.DeleteAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.DeleteAsync(requestUri, cancellationToken);
         await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 

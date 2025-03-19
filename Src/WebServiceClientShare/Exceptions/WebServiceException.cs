@@ -9,7 +9,7 @@ public class WebServiceException : Exception
     /// Initializes a new instance of the <see cref="WebServiceException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    public WebServiceException(string message) : base(message)
+    public WebServiceException(string? message) : base(message)
     { }
 
     ///// <summary>
@@ -61,7 +61,7 @@ public class WebServiceException : Exception
     /// </summary>
     /// <param name="service">The web service to check.</param>
     /// <exception cref="WebServiceException">Thrown if the web service is null or not connected.</exception>
-    public static void ThrowIfNullOrNotConnected([NotNull]WebService? service)
+    public static void ThrowIfNullOrNotConnected([NotNull] WebService? service)
     {
         if (service == null)
         {
@@ -71,6 +71,20 @@ public class WebServiceException : Exception
         {
             throw new WebServiceException("WebService is not connected");
         }
+    }
+
+    /// <summary>
+    /// Throws a <see cref="WebServiceException"/> if the specified HTTP client is null, indicating that the web service is not connected.
+    /// </summary>
+    /// <param name="client">The HTTP client to check.</param>
+    /// <exception cref="WebServiceException">Thrown if the HTTP client is null.</exception>
+    public static void ThrowIfNotConnected([NotNull] HttpClient? client)
+    {
+        _ = client ?? throw new WebServiceException("WebService is not connected");
+        //if (client == null)
+        //{
+        //    throw new WebServiceException("WebService is not connected");
+        //}
     }
 
     /// <summary>

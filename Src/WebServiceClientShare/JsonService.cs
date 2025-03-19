@@ -17,8 +17,10 @@ public abstract class JsonService : WebService
     public JsonService(Uri host, IAuthenticator? authenticator, string appName, JsonSerializerContext context)
         : base(host, authenticator, appName)
     {
-        client!.DefaultRequestHeaders.Add("Accept", "application/json");
-        client!.DefaultRequestHeaders.Add("User-Agent", appName);
+        WebServiceException.ThrowIfNotConnected(client);
+
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.DefaultRequestHeaders.Add("User-Agent", appName);
         this.context = context;
     }
 
@@ -35,9 +37,9 @@ public abstract class JsonService : WebService
     protected async Task<T?> GetFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.GetAsync(requestUri, cancellationToken);
+        using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
 
 #if DEBUG
         string str = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -66,7 +68,7 @@ public abstract class JsonService : WebService
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
 
@@ -74,7 +76,7 @@ public abstract class JsonService : WebService
         string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
 #endif   
 
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             await ErrorHandlingAsync(response, memberName, cancellationToken);
@@ -95,7 +97,7 @@ public abstract class JsonService : WebService
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
 
@@ -103,7 +105,7 @@ public abstract class JsonService : WebService
         string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
 #endif   
 
-        using HttpResponseMessage response = await client!.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -122,28 +124,28 @@ public abstract class JsonService : WebService
     #region Post
 
     /// <summary>
-    /// Sends a POST request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
+    /// Sends a POST request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
-    /// <typeparam name="T1">The type of the request object.</typeparam>
-    /// <typeparam name="T2">The type of the response object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    internal async Task<T2?> PostAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    internal async Task<OUT?> PostAsJsonAsync<IN, OUT>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 #endif       
 
-        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -151,7 +153,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        var model = await ReadFromJsonAsync<T2>(response, cancellationToken);
+        var model = await ReadFromJsonAsync<OUT>(response, cancellationToken);
         return model;
     }
 
@@ -168,7 +170,7 @@ public abstract class JsonService : WebService
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
 
@@ -176,7 +178,7 @@ public abstract class JsonService : WebService
         string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
 #endif  
 
-        using HttpResponseMessage response = await client!.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -196,9 +198,9 @@ public abstract class JsonService : WebService
     protected async Task<T?> PostFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
-        using HttpResponseMessage response = await client!.PostAsync(requestUri, null, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsync(requestUri, null, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -221,7 +223,7 @@ public abstract class JsonService : WebService
     protected async Task<T?> PostFilesFromJsonAsync<T>(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         var req = new MultipartFormDataContent();
         req.Headers.Add("X-Atlassian-Token", "nocheck");
@@ -230,7 +232,7 @@ public abstract class JsonService : WebService
             req.Add(new StreamContent(file.Value), "file", file.Key);
         }
 
-        using HttpResponseMessage response = await client!.PostAsync(requestUri, req, cancellationToken);
+        using HttpResponseMessage response = await client.PostAsync(requestUri, req, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -259,7 +261,7 @@ public abstract class JsonService : WebService
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
 
@@ -270,7 +272,7 @@ public abstract class JsonService : WebService
             Content = new StringContent(str, Encoding.UTF8)
         };
 
-        using HttpResponseMessage response = await client!.SendAsync(requestMessage, cancellationToken);
+        using HttpResponseMessage response = await client.SendAsync(requestMessage, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -279,6 +281,22 @@ public abstract class JsonService : WebService
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
+    }
+
+    protected async Task<OUT?> DeleteAsJsonAsync<OUT>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        WebServiceException.ThrowIfNotConnected(client);
+
+        using HttpResponseMessage response = await client.DeleteAsync(requestUri, cancellationToken);
+
+#if DEBUG
+        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
 
@@ -301,7 +319,7 @@ public abstract class JsonService : WebService
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        WebServiceException.ThrowIfNullOrNotConnected(this);
+        WebServiceException.ThrowIfNotConnected(client);
 
         JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
 
@@ -309,7 +327,7 @@ public abstract class JsonService : WebService
         string req = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
 #endif      
 
-        using HttpResponseMessage response = await client!.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 
 #if DEBUG
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -318,7 +336,7 @@ public abstract class JsonService : WebService
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
-        //return (T2?)await response.Content.ReadFromJsonAsync(typeof(T2), context, cancellationToken);
+        //return (OUT?)await response.Content.ReadFromJsonAsync(typeof(OUT), context, cancellationToken);
     }
 
     #endregion

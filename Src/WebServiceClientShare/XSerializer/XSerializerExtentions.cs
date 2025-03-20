@@ -30,6 +30,14 @@ public static class XSerializableExt
         return res;
     }
 
+    /// <summary>
+    /// Deserializes an XML string into an object of type T using the specified root element name and namespace.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize.</typeparam>
+    /// <param name="value">The XML string to deserialize.</param>
+    /// <param name="rootElementName">The root element name of the XML.</param>
+    /// <param name="namespaceName">The namespace of the root element.</param>
+    /// <returns>The deserialized object of type T, or default if the value is null.</returns>
     public static T? XDeserialize<T>(this string? value, string rootElementName,  string namespaceName) where T : IXSerializable, new()
     {
         if (value is null)

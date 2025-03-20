@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class JsonService : WebService
 {
-    protected JsonSerializerContext context;
+    private readonly JsonSerializerContext context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonService"/> class with the specified host, authenticator, application name, and JSON serializer context.
@@ -282,6 +282,15 @@ public abstract class JsonService : WebService
 
         return await ReadFromJsonAsync<T2>(response, cancellationToken);
     }
+
+    /// <summary>
+    /// Sends a DELETE request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
+    /// </summary>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
+    /// <param name="requestUri">The request URI.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="memberName">The name of the calling member. This is automatically set by the compiler.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
 
     protected async Task<OUT?> DeleteAsJsonAsync<OUT>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {

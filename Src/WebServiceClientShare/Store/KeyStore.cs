@@ -42,6 +42,9 @@ public class KeyStore
     [JsonPropertyName("token")]
     public string? Token { get; set; }
 
+    /// <summary>
+    /// Gets or sets the expiration date and time of the authentication token.
+    /// </summary>
     [JsonPropertyName("tokenexpire")]
     public DateTime? TokenExpire { get; set; }
 

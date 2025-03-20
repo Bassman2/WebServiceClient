@@ -29,12 +29,12 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a GET request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the response object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T?> GetFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> GetFromJsonAsync<OUT>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNotConnected(client);
@@ -47,7 +47,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        var res = await ReadFromJsonAsync<T>(response, cancellationToken);
+        var res = await ReadFromJsonAsync<OUT>(response, cancellationToken);
         return res;
     }
 
@@ -58,51 +58,48 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a PUT request to the specified URI with the provided object serialized as JSON.
     /// </summary>
-    /// <typeparam name="T">The type of the request object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected async Task PutAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task PutAsJsonAsync<IN>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 #endif   
 
         using HttpResponseMessage response = await client.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
+        await ErrorCheckAsync(response, memberName, cancellationToken);
     }
 
     /// <summary>
     /// Sends a PUT request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
     /// </summary>
-    /// <typeparam name="T1">The type of the request object.</typeparam>
-    /// <typeparam name="T2">The type of the response object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T2?> PutAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> PutAsJsonAsync<IN, OUT>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 #endif   
 
         using HttpResponseMessage response = await client.PutAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
@@ -111,12 +108,8 @@ public abstract class JsonService : WebService
         string res = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
 
-        if (!response.IsSuccessStatusCode)
-        {
-            await ErrorHandlingAsync(response, memberName, cancellationToken);
-        }
-
-        return await ReadFromJsonAsync<T2>(response, cancellationToken);
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
     #endregion
@@ -190,12 +183,12 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a POST request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the response object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T?> PostFromJsonAsync<T>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> PostFromJsonAsync<OUT>(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNotConnected(client);
@@ -208,19 +201,19 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<T>(response, cancellationToken);
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
     /// <summary>
     /// Sends a POST request to the specified URI with the provided files and returns the response body deserialized as an object of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the response object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="files">The files to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T?> PostFilesFromJsonAsync<T>(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> PostFilesFromJsonAsync<OUT>(string requestUri, IEnumerable<KeyValuePair<string, System.IO.Stream>> files, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNotConnected(client);
@@ -240,7 +233,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<T>(response, cancellationToken);
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
     #endregion
@@ -250,22 +243,22 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a DELETE request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
     /// </summary>
-    /// <typeparam name="T1">The type of the request object.</typeparam>
-    /// <typeparam name="T2">The type of the response object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T2?> DeleteJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> DeleteJsonAsync<IN, OUT>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
-        string str = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 
         HttpRequestMessage requestMessage = new(HttpMethod.Delete, requestUri)
         {
@@ -280,7 +273,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<T2>(response, cancellationToken);
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
     /// <summary>
@@ -317,23 +310,23 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a PATCH request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
     /// </summary>
-    /// <typeparam name="T1">The type of the request object.</typeparam>
-    /// <typeparam name="T2">The type of the response object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
+    /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T2?> PatchAsJsonAsync<T1, T2>(string requestUri, T1 obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task<OUT?> PatchAsJsonAsync<IN, OUT>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T1> jsonTypeInfo = (JsonTypeInfo<T1>)context.GetTypeInfo(typeof(T1))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string req = JsonSerializer.Serialize<T1>(obj, jsonTypeInfo);
+        string req = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 #endif      
 
         using HttpResponseMessage response = await client.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
@@ -344,8 +337,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<T2>(response, cancellationToken);
-        //return (OUT?)await response.Content.ReadFromJsonAsync(typeof(OUT), context, cancellationToken);
+        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
     }
 
     #endregion

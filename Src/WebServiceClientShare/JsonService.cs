@@ -27,7 +27,7 @@ public abstract class JsonService : WebService
     #region Get
 
     /// <summary>
-    /// Sends a GET request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="T"/>.
+    /// Sends a GET request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
@@ -81,7 +81,7 @@ public abstract class JsonService : WebService
     }
 
     /// <summary>
-    /// Sends a PUT request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
+    /// Sends a PUT request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="IN">The type of the request object.</typeparam>
     /// <typeparam name="OUT">The type of the response object.</typeparam>
@@ -181,7 +181,7 @@ public abstract class JsonService : WebService
     }
 
     /// <summary>
-    /// Sends a POST request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="T"/>.
+    /// Sends a POST request to the specified URI and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
@@ -205,7 +205,7 @@ public abstract class JsonService : WebService
     }
 
     /// <summary>
-    /// Sends a POST request to the specified URI with the provided files and returns the response body deserialized as an object of type <typeparamref name="T"/>.
+    /// Sends a POST request to the specified URI with the provided files and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="OUT">The type of the response object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
@@ -241,7 +241,7 @@ public abstract class JsonService : WebService
     #region Delete
 
     /// <summary>
-    /// Sends a DELETE request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
+    /// Sends a DELETE request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="IN">The type of the request object.</typeparam>
     /// <typeparam name="OUT">The type of the response object.</typeparam>
@@ -308,7 +308,7 @@ public abstract class JsonService : WebService
     #region PATCH
 
     /// <summary>
-    /// Sends a PATCH request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="T2"/>.
+    /// Sends a PATCH request to the specified URI with the provided object serialized as JSON and returns the response body deserialized as an object of type <typeparamref name="OUT"/>.
     /// </summary>
     /// <typeparam name="IN">The type of the request object.</typeparam>
     /// <typeparam name="OUT">The type of the response object.</typeparam>

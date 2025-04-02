@@ -353,8 +353,8 @@ public abstract class JsonService : WebService
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        try
-        {
+        //try
+        //{
         var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
 
         //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
@@ -363,11 +363,11 @@ public abstract class JsonService : WebService
 
         //var res = (T?)await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
         return res;
-        }
-        catch(Exception e)
-        {
-            throw;
-        }
+        //}
+        //catch(Exception e)
+        //{
+        //    throw;
+        //}
     }
 
     /*

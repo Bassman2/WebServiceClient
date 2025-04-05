@@ -1,4 +1,6 @@
-﻿namespace WebServiceClient;
+﻿using System.Threading;
+
+namespace WebServiceClient;
 
 /// <summary>
 /// Represents an abstract base class for JSON-based web services, providing common functionality for HTTP operations.
@@ -353,32 +355,16 @@ public abstract class JsonService : WebService
     /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        //try
-        //{
-        var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
+        //var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
 
-        //JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        var res = await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
 
-        
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        //var res = (T?)await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
         return res;
-        //}
-        //catch(Exception e)
-        //{
-        //    throw;
-        //}
     }
-
-    /*
-    private static async Task<object?> ReadFromJsonAsyncCore(HttpContent content, Type type, JsonSerializerContext context, CancellationToken cancellationToken)
-    {
-        using (Stream contentStream = await GetContentStreamAsync(content, cancellationToken).ConfigureAwait(false))
-        {
-            return await JsonSerializer.DeserializeAsync(contentStream, type, context, cancellationToken).ConfigureAwait(false);
-        }
-    }
-    */
+       
     #endregion
 }
 

@@ -155,22 +155,22 @@ public abstract class JsonService : WebService
     /// <summary>
     /// Sends a POST request to the specified URI with the provided object serialized as JSON.
     /// </summary>
-    /// <typeparam name="T">The type of the request object.</typeparam>
+    /// <typeparam name="IN">The type of the request object.</typeparam>
     /// <param name="requestUri">The request URI.</param>
     /// <param name="obj">The object to send.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="memberName">The name of the calling member.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected async Task PostAsJsonAsync<T>(string requestUri, T obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    protected async Task PostAsJsonAsync<IN>(string requestUri, IN obj, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
+        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string str = JsonSerializer.Serialize<T>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
 #endif  
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);

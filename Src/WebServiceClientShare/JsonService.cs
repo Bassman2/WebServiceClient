@@ -356,11 +356,13 @@ public abstract class JsonService : WebService
     protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         //var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
+#if DEBUG
+        string str = response.Content.ReadAsStringAsync(cancellationToken).Result;
+#endif
 
         JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
         var res = await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
 
-        string str = await response.Content.ReadAsStringAsync(cancellationToken);
 
         return res;
     }

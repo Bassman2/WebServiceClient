@@ -1,14 +1,11 @@
-﻿using System.Net.Http.Json;
-using System.Threading;
-
-namespace WebServiceClient;
+﻿namespace WebServiceClient;
 
 /// <summary>
 /// Represents an abstract base class for JSON-based web services, providing common functionality for HTTP operations.
 /// </summary>
 public abstract class JsonService : WebService
 {
-    private readonly JsonSerializerContext context;
+    protected readonly JsonSerializerContext context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonService"/> class with the specified host, authenticator, application name, and JSON serializer context.
@@ -45,13 +42,14 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);
 
 #if DEBUG
-        string str = await response.Content.ReadAsStringAsync(cancellationToken);
+        string str = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        var res = await ReadFromJsonAsync<OUT>(response, cancellationToken);
-        return res;
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
     #endregion
@@ -112,7 +110,6 @@ public abstract class JsonService : WebService
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
-        //return await ReadFromJsonAsync<OUT>(response, cancellationToken);//
 
         JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
         var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
@@ -148,13 +145,10 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.PostAsJsonAsync(requestUri, obj, jsonTypeInfoIn, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
-
-        //var model = await ReadFromJsonAsync<OUT>(response, cancellationToken);
-        //return model;
 
         JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
         var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
@@ -185,7 +179,7 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.PostAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
@@ -207,12 +201,14 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.PostAsync(requestUri, null, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
     /// <summary>
@@ -239,12 +235,14 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.PostAsync(requestUri, req, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
     #endregion
@@ -267,9 +265,9 @@ public abstract class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
+        JsonTypeInfo<IN> jsonTypeInfoIn = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
-        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
+        string str = JsonSerializer.Serialize<IN>(obj, jsonTypeInfoIn);
 
         HttpRequestMessage requestMessage = new(HttpMethod.Delete, requestUri)
         {
@@ -279,12 +277,14 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.SendAsync(requestMessage, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
     /// <summary>
@@ -304,17 +304,17 @@ public abstract class JsonService : WebService
         using HttpResponseMessage response = await client.DeleteAsync(requestUri, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
-
     #endregion
-
 
     #region PATCH
 
@@ -334,48 +334,25 @@ public abstract class JsonService : WebService
         ArgumentNullException.ThrowIfNull(obj, nameof(obj));
         WebServiceException.ThrowIfNotConnected(client);
 
-        JsonTypeInfo<IN> jsonTypeInfo = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
+        JsonTypeInfo<IN> jsonTypeInfoIn = (JsonTypeInfo<IN>)context.GetTypeInfo(typeof(IN))!;
 
 #if DEBUG
-        string req = JsonSerializer.Serialize<IN>(obj, jsonTypeInfo);
+        string req = JsonSerializer.Serialize<IN>(obj, jsonTypeInfoIn);
 #endif      
 
-        using HttpResponseMessage response = await client.PatchAsJsonAsync(requestUri, obj, jsonTypeInfo, cancellationToken);
+        using HttpResponseMessage response = await client.PatchAsJsonAsync(requestUri, obj, jsonTypeInfoIn, cancellationToken);
 
 #if DEBUG
-        string res = await response.Content.ReadAsStringAsync(cancellationToken);
+        string res = response.Content.ReadAsStringAsync(cancellationToken).Result;
 #endif
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
-        return await ReadFromJsonAsync<OUT>(response, cancellationToken);
+        JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
+        var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
+        return model;
     }
 
-    #endregion
-
-    #region Json Helper
-
-    /// <summary>
-    /// Reads the JSON content from the response and deserializes it as an object of type <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the response object.</typeparam>
-    /// <param name="response">The HTTP response message.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response object.</returns>
-    protected async Task<T?> ReadFromJsonAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
-    {
-        //var res = (T?)await response.Content.ReadFromJsonAsync(typeof(T), context, cancellationToken);
-#if DEBUG
-        string str = response.Content.ReadAsStringAsync(cancellationToken).Result;
-#endif
-
-        JsonTypeInfo<T> jsonTypeInfo = (JsonTypeInfo<T>)context.GetTypeInfo(typeof(T))!;
-        var res = await response.Content.ReadFromJsonAsync<T>(jsonTypeInfo, cancellationToken);
-
-
-        return res;
-    }
-       
     #endregion
 }
 

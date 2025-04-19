@@ -47,6 +47,7 @@ public abstract class JsonService : WebService
 
         await ErrorCheckAsync(response, memberName, cancellationToken);
 
+
         JsonTypeInfo<OUT> jsonTypeInfoOut = (JsonTypeInfo<OUT>)context.GetTypeInfo(typeof(OUT))!;
         var model = await response.Content.ReadFromJsonAsync<OUT>(jsonTypeInfoOut, cancellationToken);
         return model;

@@ -5,6 +5,9 @@
 /// </summary>
 public abstract class JsonService : WebService
 {
+    /// <summary>
+    /// The JSON serializer context.
+    /// </summary>
     protected readonly JsonSerializerContext context;
 
     /// <summary>

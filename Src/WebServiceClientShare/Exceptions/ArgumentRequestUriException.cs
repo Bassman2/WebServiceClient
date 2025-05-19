@@ -21,6 +21,7 @@ public class ArgumentRequestUriException : ArgumentException
         : base(message, paramName)
     { }
 
+    
     /// <summary>
     /// Throws an <see cref="ArgumentRequestUriException"/> if the specified argument is null or consists only of white-space characters.
     /// </summary>
@@ -30,6 +31,14 @@ public class ArgumentRequestUriException : ArgumentException
     public static new void ThrowIfNullOrWhiteSpace(string? argument, string? paramName)
     {
         if (string.IsNullOrWhiteSpace(argument))
+        {
+            throw new ArgumentRequestUriException("Argument is null or empty", paramName);
+        }
+    }
+
+    public static void ThrowIfNullOrWhiteSpace(Uri? argument, string? paramName)
+    {
+        if (string.IsNullOrWhiteSpace(argument?.ToString()))
         {
             throw new ArgumentRequestUriException("Argument is null or empty", paramName);
         }

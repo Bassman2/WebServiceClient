@@ -42,12 +42,16 @@ public abstract class WebService : IDisposable
         };
         WebServiceException.ThrowIfNotConnected(client);
         client.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
+        InitializeClient(client);
         authenticator?.Authenticate(this, this.client);
         if (AuthenticationTestUrl != null)
         {
             TestAutentication();
         }
     }
+
+    protected virtual void InitializeClient(HttpClient client)
+    { }
 
     /// <summary>
     /// Releases the resources used by the <see cref="WebService"/> class.
@@ -222,6 +226,43 @@ public abstract class WebService : IDisposable
         using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
     }
+
+    protected async Task DownloadLocationAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+        => await DownloadLocationAsync(new Uri(requestUri), filePath, cancellationToken, memberName);
+
+    protected async Task DownloadLocationAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
+    {
+        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        WebServiceException.ThrowIfNotConnected(client);
+
+        WebServiceException.ThrowIfNotConnected(client);
+
+        using HttpResponseMessage resp = await client.GetAsync(requestUri, cancellationToken);
+        Uri? reqUri = resp.RequestMessage?.RequestUri;
+
+
+        using HttpResponseMessage response = await client.GetAsync(reqUri, cancellationToken);
+        string str = await response.Content.ReadAsStringAsync(cancellationToken);
+        await ErrorCheckAsync(response, memberName, cancellationToken);
+        using var file = System.IO.File.Create(filePath);
+        await response.Content.CopyToAsync(file, cancellationToken);
+    }
+
+    //{
+    //    //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+    //    WebServiceException.ThrowIfNotConnected(client);
+
+    //    using HttpResponseMessage resp = await client.GetAsync(requestUri, cancellationToken);
+    //    Uri? reqUri = resp.RequestMessage?.RequestUri;
+
+
+    //    using HttpResponseMessage response = await client.GetAsync(reqUri, cancellationToken);
+    //    string str = await response.Content.ReadAsStringAsync(cancellationToken);
+    //    await ErrorCheckAsync(response, memberName, cancellationToken);
+    //    using var file = System.IO.File.Create(filePath);
+    //    await response.Content.CopyToAsync(file, cancellationToken);
+    //}
+
 
     #endregion
 

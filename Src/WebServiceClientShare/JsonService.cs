@@ -3,28 +3,24 @@
 /// <summary>
 /// Represents an abstract base class for JSON-based web services, providing common functionality for HTTP operations.
 /// </summary>
-public abstract class JsonService : WebService
+/// <remarks>
+/// Initializes a new instance of the <see cref="JsonService"/> class with the specified host, authenticator, application name, and JSON serializer context.
+/// </remarks>
+/// <param name="host">The base URI of the web service.</param>
+/// <param name="authenticator">The authenticator used to authenticate the web service client.</param>
+/// <param name="appName">The name of the application.</param>
+/// <param name="context">The JSON serializer context.</param>
+public abstract class JsonService(Uri host, IAuthenticator? authenticator, string appName, JsonSerializerContext context) : WebService(host, authenticator, appName)
 {
     /// <summary>
     /// The JSON serializer context.
     /// </summary>
-    protected readonly JsonSerializerContext context;
+    protected readonly JsonSerializerContext context = context;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JsonService"/> class with the specified host, authenticator, application name, and JSON serializer context.
-    /// </summary>
-    /// <param name="host">The base URI of the web service.</param>
-    /// <param name="authenticator">The authenticator used to authenticate the web service client.</param>
-    /// <param name="appName">The name of the application.</param>
-    /// <param name="context">The JSON serializer context.</param>
-    public JsonService(Uri host, IAuthenticator? authenticator, string appName, JsonSerializerContext context)
-        : base(host, authenticator, appName)
+    protected override void InitializeClient(HttpClient client)
     {
-        WebServiceException.ThrowIfNotConnected(client);
-
         client.DefaultRequestHeaders.Add("Accept", "application/json");
-        client.DefaultRequestHeaders.Add("User-Agent", appName);
-        this.context = context;
+        base.InitializeClient(client);
     }
 
     #region Get

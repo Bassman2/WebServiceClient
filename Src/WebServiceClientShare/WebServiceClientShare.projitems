@@ -9,6 +9,7 @@
     <Import_RootNamespace>WebServiceClient</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authenticator\Basic2Authenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\MultiAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extentions.cs" />

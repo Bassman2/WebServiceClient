@@ -19,7 +19,12 @@ public abstract class JsonService(Uri host, IAuthenticator? authenticator, strin
 
     protected override void InitializeClient(HttpClient client)
     {
-        client.DefaultRequestHeaders.Add("Accept", "application/json");
+    //    client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+        // content-type    text/html;charset=UTF-8
+        // client.DefaultRequestHeaders.Conmtent
         base.InitializeClient(client);
     }
 

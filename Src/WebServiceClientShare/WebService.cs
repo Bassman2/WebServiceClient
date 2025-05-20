@@ -227,6 +227,8 @@ public abstract class WebService : IDisposable
         await response.Content.CopyToAsync(file, cancellationToken);
     }
 
+
+
     protected async Task DownloadLocationAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
         => await DownloadLocationAsync(new Uri(requestUri, UriKind.RelativeOrAbsolute), filePath, cancellationToken, memberName);
 
@@ -235,10 +237,10 @@ public abstract class WebService : IDisposable
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNotConnected(client);
 
-        WebServiceException.ThrowIfNotConnected(client);
-
         using HttpResponseMessage resp = await client.GetAsync(requestUri, cancellationToken);
         Uri? reqUri = resp.RequestMessage?.RequestUri;
+
+        Uri? location = resp.Headers.Location;
 
 
         using HttpResponseMessage response = await client.GetAsync(reqUri, cancellationToken);

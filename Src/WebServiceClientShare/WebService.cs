@@ -228,7 +228,7 @@ public abstract class WebService : IDisposable
     }
 
     protected async Task DownloadLocationAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
-        => await DownloadLocationAsync(new Uri(requestUri), filePath, cancellationToken, memberName);
+        => await DownloadLocationAsync(new Uri(requestUri, UriKind.RelativeOrAbsolute), filePath, cancellationToken, memberName);
 
     protected async Task DownloadLocationAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {

@@ -235,11 +235,25 @@ public abstract class WebService : IDisposable
         await response.Content.CopyToAsync(file, cancellationToken);
     }
 
-
-
+    /// <summary>
+    /// Sends a GET request to the specified URI, follows the response location if present, and downloads the response body to the specified file path.
+    /// </summary>
+    /// <param name="requestUri">The request URI as a string.</param>
+    /// <param name="filePath">The file path to save the response body.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <param name="memberName">The name of the calling member. This is automatically set by the compiler.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task DownloadLocationAsync(string requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
         => await DownloadLocationAsync(new Uri(requestUri, UriKind.RelativeOrAbsolute), filePath, cancellationToken, memberName);
 
+    /// <summary>
+    /// Sends a GET request to the specified URI, follows the response location if present, and downloads the response body to the specified file path.
+    /// </summary>
+    /// <param name="requestUri">The request URI as a <see cref="Uri"/>.</param>
+    /// <param name="filePath">The file path to save the response body.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <param name="memberName">The name of the calling member. This is automatically set by the compiler.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected async Task DownloadLocationAsync(Uri requestUri, string filePath, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
         ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));

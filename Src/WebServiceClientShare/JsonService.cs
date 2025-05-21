@@ -17,6 +17,14 @@ public abstract class JsonService(Uri host, IAuthenticator? authenticator, strin
     /// </summary>
     protected readonly JsonSerializerContext context = context;
 
+    /// <summary>
+    /// Configures the <see cref="HttpClient"/> instance for JSON-based web service requests.
+    /// </summary>
+    /// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
+    /// <remarks>
+    /// Sets the default request headers to accept JSON and other common content types.
+    /// Override this method to apply additional client configuration before making requests.
+    /// </remarks>
     protected override void InitializeClient(HttpClient client)
     {
     //    client.DefaultRequestHeaders.Add("Accept", "application/json");

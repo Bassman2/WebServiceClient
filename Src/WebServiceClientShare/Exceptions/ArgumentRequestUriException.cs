@@ -36,6 +36,12 @@ public class ArgumentRequestUriException : ArgumentException
         }
     }
 
+    /// <summary>
+    /// Throws an <see cref="ArgumentRequestUriException"/> if the specified <see cref="Uri"/> argument is null or consists only of white-space characters.
+    /// </summary>
+    /// <param name="argument">The <see cref="Uri"/> argument to check.</param>
+    /// <param name="paramName">The name of the parameter that caused the exception.</param>
+    /// <exception cref="ArgumentRequestUriException">Thrown when the <paramref name="argument"/> is null or its string representation is white-space.</exception>
     public static void ThrowIfNullOrWhiteSpace(Uri? argument, string? paramName)
     {
         if (string.IsNullOrWhiteSpace(argument?.ToString()))

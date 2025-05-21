@@ -50,6 +50,14 @@ public abstract class WebService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Allows derived classes to customize the initialization of the <see cref="HttpClient"/> instance.
+    /// </summary>
+    /// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
+    /// <remarks>
+    /// Override this method in a derived class to set additional headers, configure default request options,
+    /// or apply other custom settings to the HTTP client before it is used for requests.
+    /// </remarks>
     protected virtual void InitializeClient(HttpClient client)
     { }
 

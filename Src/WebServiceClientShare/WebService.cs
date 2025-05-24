@@ -426,12 +426,14 @@ public abstract class WebService : IDisposable
     /// </summary>
     /// <param name="entry">The name and value pair.</param>
     /// <returns>The query string entry.</returns>
-    private static string QueryEntry((string Name, object? Value) entry)
+    protected virtual string QueryEntry((string Name, object? Value) entry)
     {
         string? typeName = entry.Value?.GetType().Name; 
         switch (typeName)
         {
         case "Boolean": return $"{entry.Name}={entry.Value?.ToString()?.ToLower()}".TrimEnd('=');
+        //// used for Confluence Expands
+        //case "Enum": return $"{entry.Name}={((Enum)(entry.Value!)).ToString()?.Replace(" ", "").Replace('_', '.').ToLower()}";
         }
         //Select(static t => (t.Name, Value: t.Value!.GetType().Name switch
         //    {
@@ -443,19 +445,21 @@ public abstract class WebService : IDisposable
 
         return $"{entry.Name}={entry.Value}".TrimEnd('=').Trim(' ');
     }
-    
+
+   
+
     /// <summary>
     /// Combines the specified name and value pairs into a query string.
     /// </summary>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined query string.</returns>
-    private static string CombineQuery(params (string Name, object? Value)[] values)
+    private string CombineQuery(params (string Name, object? Value)[] values)
     {
         //string str = values.
         //    Where(t => t.Value != null).            
         //    Select(t => QueryEntry(t)).
         //    Aggregate("", (a, b) => $"{a}&{b}").Trim('&');
-        string str = string.Join('&', values.Where(t => t.Value != null).Select(t => QueryEntry(t)));
+        string str = string.Join('&', values.Where(t => t.Value != null).Select(t => QueryEntry(t)).Where(t => !string.IsNullOrWhiteSpace(t)));
         return str;
     }
 
@@ -487,7 +491,7 @@ public abstract class WebService : IDisposable
     /// <param name="urlPartA">The URL part.</param>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined URL.</returns>
-    public static string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
+    public string CombineUrl(string urlPartA, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA);
@@ -502,7 +506,7 @@ public abstract class WebService : IDisposable
     /// <param name="urlPartB">The second URL part.</param>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined URL.</returns>
-    public static string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
+    public string CombineUrl(string urlPartA, string urlPartB, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB);
@@ -518,7 +522,7 @@ public abstract class WebService : IDisposable
     /// <param name="urlPartC">The third URL part.</param>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined URL.</returns>
-    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
+    public string CombineUrl(string urlPartA, string urlPartB, string urlPartC, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC);
@@ -535,7 +539,7 @@ public abstract class WebService : IDisposable
     /// <param name="urlPartD">The fourth URL part.</param>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined URL.</returns>
-    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
+    public string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD);
@@ -553,7 +557,7 @@ public abstract class WebService : IDisposable
     /// <param name="urlPartE">The fifth URL part.</param>
     /// <param name="values">The name and value pairs.</param>
     /// <returns>The combined URL.</returns>
-    public static string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, string urlPartE, params (string Name, object? Value)[] values)
+    public string CombineUrl(string urlPartA, string urlPartB, string urlPartC, string urlPartD, string urlPartE, params (string Name, object? Value)[] values)
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD, urlPartE);

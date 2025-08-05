@@ -270,6 +270,8 @@ public abstract class WebService : IDisposable
         await ErrorCheckAsync(response, memberName, cancellationToken);
         using var file = System.IO.File.Create(filePath);
         await response.Content.CopyToAsync(file, cancellationToken);
+        //file.Flush();
+        //file.Close();
     }
 
     //{

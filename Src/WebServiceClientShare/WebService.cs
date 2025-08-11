@@ -497,7 +497,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA);
-        string str = url.Contains('?') ? $"/{url}&{par}".TrimEnd('&') : $"/{url}?{par}".TrimEnd('?');
+        string str = url.Contains('?') ? $"{url}&{par}".TrimEnd('&') : $"{url}?{par}".TrimEnd('?');
         return str;
     }
 
@@ -512,7 +512,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB);
-        string str = $"/{url}?{par}".TrimEnd('?');
+        string str = $"{url}?{par}".TrimEnd('?');
         return str;
     }
 
@@ -528,7 +528,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC);
-        string str = $"/{url}?{par}".TrimEnd('?');
+        string str = $"{url}?{par}".TrimEnd('?');
         return str;
     }
 
@@ -545,7 +545,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD);
-        string str = $"/{url}?{par}".TrimEnd('?');
+        string str = $"{url}?{par}".TrimEnd('?');
         return str;
     }
 
@@ -563,7 +563,7 @@ public abstract class WebService : IDisposable
     {
         string par = CombineQuery(values);
         string url = CombineInt(urlPartA, urlPartB, urlPartC, urlPartD, urlPartE);
-        string str = $"/{url}?{par}".TrimEnd('?');
+        string str = $"{url}?{par}".TrimEnd('?');
         return str;
     }
 

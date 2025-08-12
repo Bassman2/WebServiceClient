@@ -46,15 +46,43 @@ public class WebServiceException : Exception
     /// <param name="reasonPhrase">The reason phrase returned by the web service.</param>
     /// <param name="memberName">The name of the member that caused the error.</param>
     public WebServiceException(string? message, Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase, string memberName) 
-        : base($"{statusCode} {reasonPhrase}: \"{requestUri}\" {message} from {memberName}")
+        : base(message)
     {
+        this.RequestUri = requestUri;
         this.StatusCode = statusCode;
+        this.ReasonPhrase = reasonPhrase;
+        this.MemberName = memberName;
     }
+
+    /// <summary>
+    /// Gets the URI of the web request that caused the error.
+    /// </summary>
+    public Uri? RequestUri { get; }
 
     /// <summary>
     /// Gets the HTTP status code returned by the web service.
     /// </summary>
     public HttpStatusCode StatusCode { get; }
+
+    /// <summary>
+    /// Gets the reason phrase returned by the web service.
+    /// </summary>
+    public string? ReasonPhrase { get; }
+
+
+    /// <summary>
+    /// Gets the name of the member that caused the error.
+    /// </summary>
+    public string? MemberName { get; }
+
+    /// <summary>
+    /// Returns a string that represents the current <see cref="WebServiceException"/>.
+    /// </summary>
+    /// <returns>A string representation of the current exception.</returns>
+    public override string ToString()
+    {
+        return $"{base.ToString()}, RequestUri: {RequestUri}, StatusCode: {StatusCode}, ReasonPhrase: {ReasonPhrase}, MemberName: {MemberName}";
+    }
 
     /// <summary>
     /// Throws a <see cref="WebServiceException"/> if the specified web service is null or not connected.

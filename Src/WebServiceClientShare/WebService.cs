@@ -429,6 +429,7 @@ public abstract class WebService : IDisposable
         return str?.
             Replace(' ', '+').
             Replace("&", "%26").
+            Replace("/", "%2F").
             Replace("=", "%3D").
             Replace("?", "%3F").
             Replace("@", "%40").

@@ -423,6 +423,19 @@ public abstract class WebService : IDisposable
     // Value   : ("Name", value)    => "Name=Value"
     // Bool    : ("Name", bool)     =>  "Name={true/fals}"  
 
+    private string? Escape(string? str)
+    {
+        //return Uri.EscapeDataString(str);
+        return str?.
+            Replace(' ', '+').
+            Replace("&", "%26").
+            Replace("=", "%3D").
+            Replace("?", "%3F").
+            Replace("@", "%40").
+            Replace("[", "%5B").
+            Replace("]", "%5D");
+    }
+
     /// <summary>
     /// Creates a query string entry from the specified name and value.
     /// </summary>
@@ -430,22 +443,16 @@ public abstract class WebService : IDisposable
     /// <returns>The query string entry.</returns>
     protected virtual string QueryEntry((string Name, object? Value) entry)
     {
-        string? typeName = entry.Value?.GetType().Name; 
-        switch (typeName)
+        string? typeName = entry.Value?.GetType().Name;
+        return typeName switch
         {
-        case "Boolean": return $"{entry.Name}={entry.Value?.ToString()?.ToLower()}".TrimEnd('=');
+            "Boolean" => $"{Escape(entry.Name)}={entry.Value?.ToString()?.ToLower()}".TrimEnd('='),
+            "String"  => $"{Escape(entry.Name)}={Escape((string?)entry.Value)}",
+            _ =>         $"{Escape(entry.Name)}={entry.Value}".TrimEnd('=').Trim(' ') 
+
         //// used for Confluence Expands
         //case "Enum": return $"{entry.Name}={((Enum)(entry.Value!)).ToString()?.Replace(" ", "").Replace('_', '.').ToLower()}";
-        }
-        //Select(static t => (t.Name, Value: t.Value!.GetType().Name switch
-        //    {
-        //        "Bool" => t.Value.ToString()?.ToLower(),
-        //        "String" => t.Value.ToString(),
-        //        _ => throw new Exception(t.Value.GetType().Name)
-        //    }
-        //)).
-
-        return $"{entry.Name}={entry.Value}".TrimEnd('=').Trim(' ');
+        };
     }
 
    

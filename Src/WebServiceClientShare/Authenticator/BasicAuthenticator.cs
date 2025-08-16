@@ -5,7 +5,7 @@ internal class BasicAuthenticator(string name, string login, string password, En
     public void Authenticate(WebService service, HttpClient client)
     {
         string header = Convert.ToBase64String((encoding ?? Encoding.UTF8).GetBytes($"{login}:{password}"));
-        client.DefaultRequestHeaders.Add(name, header);
+        client.DefaultRequestHeaders.Add(name, "Basic " + header);
     }
 }
 

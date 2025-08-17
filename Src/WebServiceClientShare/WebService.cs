@@ -44,7 +44,7 @@ public abstract class WebService : IDisposable
         client.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
         InitializeClient(client);
         authenticator?.Authenticate(this, this.client);
-        if (AuthenticationTestUrl != null)
+        if (!string.IsNullOrWhiteSpace(AuthenticationTestUrl))
         {
             TestAutentication();
         }

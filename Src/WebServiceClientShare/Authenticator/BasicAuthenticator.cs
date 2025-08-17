@@ -6,6 +6,9 @@ internal class BasicAuthenticator(string name, string login, string password, En
     {
         string header = Convert.ToBase64String((encoding ?? Encoding.UTF8).GetBytes($"{login}:{password}"));
         client.DefaultRequestHeaders.Add(name, "Basic " + header);
+
+        //client.DefaultRequestHeaders.Add("Authorization", "Basic YnM6VmlzdWFsRW50ZTYuMVNwMg==");
+        //Authorization: Basic YnM6VmlzdWFsRW50ZTYuMVNwMg==
     }
 }
 

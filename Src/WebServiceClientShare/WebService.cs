@@ -132,6 +132,33 @@ public abstract class WebService : IDisposable
         }
     }
 
+    #region Version
+
+    /// <summary>
+    /// Gets the version of the web service asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web service.</returns>
+    public virtual async Task<Version?> GetVersionAsync(CancellationToken cancellationToken = default)
+    {
+        var res = await GetVersionStringAsync(cancellationToken);
+        return res != null && Version.TryParse(res, out Version? version) ? version : null;
+    }
+
+    /// <summary>
+    /// Gets the version of the web service as a string asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web service as a string.</returns>
+    //public abstract Task<string?> GetVersionStringAsync(CancellationToken cancellationToken);
+
+    public virtual async Task<string?> GetVersionStringAsync(CancellationToken cancellationToken = default)
+    {
+        return await Task.FromResult("0.0.0");
+    }
+
+    #endregion
+
     #region Get
 
     /// <summary>
@@ -423,7 +450,7 @@ public abstract class WebService : IDisposable
     // Value   : ("Name", value)    => "Name=Value"
     // Bool    : ("Name", bool)     =>  "Name={true/fals}"  
 
-    private string? Escape(string? str)
+    private static string? Escape(string? str)
     {
         //return Uri.EscapeDataString(str);
         return str?.

@@ -22,7 +22,7 @@ public class KeyStore
     /// Gets or sets the host URL.
     /// </summary>
     [JsonPropertyName("host")]
-    public string? Host { get; set; }
+    public string Host { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the URL to verify the host.
@@ -83,6 +83,27 @@ public class KeyStore
     /// </summary>
     [JsonPropertyName("update")]
     public string? Update { get; set; }
+
+    /// <summary>
+    /// Gets the URI for the host specified in the <see cref="Host"/> property.
+    /// </summary>
+    [JsonIgnore]
+    public Uri Url => new(Host);
+
+    /// <summary>
+    /// Gets an <see cref="IAuthenticator"/> instance based on the <see cref="AuthenticationType"/> property.
+    /// Returns <c>null</c> if <see cref="AuthenticationType"/> is <see cref="AuthenticationType.None"/>.
+    /// </summary>
+    [JsonIgnore]
+    public IAuthenticator? Authenticator =>
+        Authentication switch
+        {
+        AuthenticationType.None => null,
+        AuthenticationType.Basic => new BasicAuthenticator(Login!, Password!),
+        AuthenticationType.Bearer => new BearerAuthenticator(Token!),
+        _ => throw new NotSupportedException()
+        };
+
 
     /// <summary>
     /// Retrieves a KeyStore item by name. If the items dictionary is not initialized, it loads from the JSON file or creates a demo file if it doesn't exist.

@@ -98,12 +98,12 @@ public class KeyStore
     public IAuthenticator? Authenticator =>
         Authentication switch
         {
-        AuthenticationType.None => null,
-        AuthenticationType.Basic => new BasicAuthenticator(Login!, Password!),
-        AuthenticationType.Bearer => new BearerAuthenticator(Token!),
-        _ => throw new NotSupportedException()
+            AuthenticationType.None => null,
+            AuthenticationType.Basic => new BasicAuthenticator(Login!, Password!),
+            AuthenticationType.Bearer => new BearerAuthenticator(Token!),
+            AuthenticationType.BearerAndJFrogApi => new MultiAuthenticator(new BearerAuthenticator(Token!), new ApiKeyAuthenticator("X-JFrog-Art-Api", Token!)),
+            _ => throw new NotSupportedException()
         };
-
 
     /// <summary>
     /// Retrieves a KeyStore item by name. If the items dictionary is not initialized, it loads from the JSON file or creates a demo file if it doesn't exist.

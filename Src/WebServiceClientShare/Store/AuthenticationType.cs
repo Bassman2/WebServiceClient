@@ -19,7 +19,7 @@ public enum AuthenticationType
     /// <summary>
     /// Bearer token authentication.
     /// </summary>
-    Bearer
+    Bearer,
 
     ///// <summary>
     ///// Token-based authentication.
@@ -30,4 +30,9 @@ public enum AuthenticationType
     ///// Login-based authentication.
     ///// </summary>
     //Login,
+
+    /// <summary>
+    /// Bearer token authentication combined with JFrog API authentication.
+    /// </summary>
+    BearerAndJFrogApi
 }

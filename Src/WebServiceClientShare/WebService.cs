@@ -170,7 +170,7 @@ public abstract class WebService : IDisposable
     /// <returns>A task that represents the asynchronous operation. The task result contains the response body as a string.</returns>
     protected async Task<string?> GetStringAsync(string requestUri, CancellationToken cancellationToken, [CallerMemberName] string memberName = "")
     {
-        ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
+        //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
         WebServiceException.ThrowIfNotConnected(client);
 
         using HttpResponseMessage response = await client.GetAsync(requestUri, cancellationToken);

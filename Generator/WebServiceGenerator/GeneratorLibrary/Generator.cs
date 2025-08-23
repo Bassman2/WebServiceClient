@@ -1,9 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
-namespace WebServiceGenerator
+namespace WebServiceGenerator.GeneratorLibrary
 {
     public class Generator : IIncrementalGenerator
     {
@@ -38,26 +40,19 @@ namespace WebServiceGenerator
 
         public IEnumerable<Class> GetAllClasses()
         {
+            if (Compilation == null) throw new ArgumentNullException(nameof(Compilation));
+
             foreach (var cla in Classes)
             {
-                if (Compilation!.GetSemanticModel(cla.SyntaxTree).GetDeclaredSymbol(cla) is INamedTypeSymbol symbol)
+                if (Compilation.GetSemanticModel(cla.SyntaxTree).GetDeclaredSymbol(cla) is INamedTypeSymbol symbol)
                 {
                     yield return new Class(symbol);
                 }
             }
         }
 
-        public IEnumerable<Class> GetAllClassesWithAttribute(string attributeFullName)
-        {
-            foreach (var cla in GetAllClasses())
-            {
-                if (cla.GetAttribute(attributeFullName) != null)
-                {
-                    yield return cla;
-                }
-            }
-        }
-
+        public IEnumerable<Class> GetAllClassesWithAttribute(string attributeFullName) => GetAllClasses().Where(c => c.HasAttribute(attributeFullName));
+        
         public void AddSource (string hintName, string source) => Context.AddSource(hintName, source);
     }
 }

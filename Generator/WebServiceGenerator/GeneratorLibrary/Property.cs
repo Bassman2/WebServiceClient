@@ -1,9 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace WebServiceGenerator
+namespace WebServiceGenerator.GeneratorLibrary
 {
     public class Property(IPropertySymbol symbol)
     {
@@ -13,5 +10,7 @@ namespace WebServiceGenerator
         public bool HasGet = symbol.GetMethod != null;
 
         public bool HasSet = symbol.SetMethod != null;
+
+        public override string ToString() => $"{TypeName} {Name} {{ {(HasGet ? "get; " : "")}{(HasSet ? "set;" : "")} }}";
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace WebServiceGenerator
+namespace WebServiceGenerator.GeneratorLibrary
 {
     public  class ConstructorArgument(TypedConstant arg) 
     {

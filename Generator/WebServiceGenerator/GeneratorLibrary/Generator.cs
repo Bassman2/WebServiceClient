@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace WebServiceGenerator.GeneratorLibrary
 {
-    public class Generator : IIncrementalGenerator
+    public class Generator : BaseAttributes, IIncrementalGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
@@ -31,7 +31,7 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         protected SourceProductionContext Context { get; private set; }
 
-        protected Compilation? Compilation { get; private set; }
+        protected Compilation Compilation { get; private set; } = null!;
 
         protected ImmutableArray<ClassDeclarationSyntax> Classes { get; private set; }
 
@@ -40,8 +40,6 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         public IEnumerable<Class> GetAllClasses()
         {
-            if (Compilation == null) throw new ArgumentNullException(nameof(Compilation));
-
             foreach (var cla in Classes)
             {
                 if (Compilation.GetSemanticModel(cla.SyntaxTree).GetDeclaredSymbol(cla) is INamedTypeSymbol symbol)
@@ -54,5 +52,7 @@ namespace WebServiceGenerator.GeneratorLibrary
         public IEnumerable<Class> GetAllClassesWithAttribute(string attributeFullName) => GetAllClasses().Where(c => c.HasAttribute(attributeFullName));
         
         public void AddSource (string hintName, string source) => Context.AddSource(hintName, source);
+
+        public override IEnumerable<Attribute> Attributes => Compilation.Assembly.GetAttributes().Select(a => new Attribute(a));
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace WebServiceGenerator.GeneratorLibrary
 {
-	public class Class(INamedTypeSymbol symbol)
-	{
+	public class Class(INamedTypeSymbol symbol) : BaseAttributes
+    {
         public string Name => symbol.Name;
 
         public string NameSpace => symbol.ToDisplayString();
@@ -16,11 +16,7 @@ namespace WebServiceGenerator.GeneratorLibrary
         
         public Property? GetProperty(string name) => Properties.FirstOrDefault(p => p.Name == name);
         
-        public IEnumerable<Attribute> Attributes => symbol.GetAttributes().Select(a => new Attribute(a));
-        
-        public bool HasAttribute(string nameWithNamespace) => Attributes.Any(a => a.NameWithNameSpace == nameWithNamespace);
-        
-        public Attribute? GetAttribute(string nameWithNamespace) => Attributes.FirstOrDefault(a => a.NameWithNameSpace == nameWithNamespace);
+        public override IEnumerable<Attribute> Attributes => symbol.GetAttributes().Select(a => new Attribute(a));
 
         override public string ToString() => $"{NameSpace} - {Name} - {NameWithNameSpace}";
 

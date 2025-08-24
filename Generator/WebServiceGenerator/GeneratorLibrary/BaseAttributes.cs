@@ -8,9 +8,9 @@ namespace WebServiceGenerator.GeneratorLibrary
     {
         public abstract IEnumerable<Attribute> Attributes { get; }
 
-        public bool HasAttribute(string nameWithNamespace) => Attributes.Any(a => a.NameWithNameSpace == nameWithNamespace);
+        public bool HasAttribute(string nameWithNamespace) => Attributes.Any(a => a.FullName == nameWithNamespace);
 
-        public Attribute? GetAttribute(string nameWithNamespace) => Attributes.FirstOrDefault(a => a.NameWithNameSpace == nameWithNamespace);
+        public Attribute? GetAttribute(string nameWithNamespace) => Attributes.FirstOrDefault(a => a.FullName == nameWithNamespace);
 
     }
 }

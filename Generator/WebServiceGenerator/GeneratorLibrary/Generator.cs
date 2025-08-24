@@ -3,7 +3,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace WebServiceGenerator.GeneratorLibrary
 {
@@ -50,9 +53,73 @@ namespace WebServiceGenerator.GeneratorLibrary
         }
 
         public IEnumerable<Class> GetAllClassesWithAttribute(string attributeFullName) => GetAllClasses().Where(c => c.HasAttribute(attributeFullName));
-        
-        public void AddSource (string hintName, string source) => Context.AddSource(hintName, source);
+
+        public void AddSource(string hintName, string source) => Context.AddSource(hintName, source);
 
         public override IEnumerable<Attribute> Attributes => Compilation.Assembly.GetAttributes().Select(a => new Attribute(a));
+
+        protected void CreateDebug()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine($"/*");
+            sb.AppendLine();
+
+            // global attributes
+            sb.AppendLine("Global Attributes");
+            sb.AppendLine();
+            DebugAttributes(sb, this);
+            sb.AppendLine();
+
+            sb.AppendLine("Classes");
+            foreach (var cl in GetAllClasses())
+            {
+                sb.AppendLine();
+                sb.AppendLine( $"  Class: Name: {cl.Name}, Namespace: {cl.NameSpace}, FullName: {cl.FullName}");
+
+                if (cl.Properties.Any())
+                {
+                    sb.AppendLine($"    Properties:");
+                    foreach (var prop in cl.Properties)
+                    {
+                        sb.AppendLine($"      {prop.TypeName} {prop.Name} {{ {(prop.HasGet ? "get; " : "")}{(prop.HasSet ? "set;" : "")} }}");
+
+                        DebugAttributes(sb, prop);
+                    }
+                }
+
+                DebugAttributes(sb, cl);
+            }
+            sb.AppendLine($"*/");
+            AddSource($"Debug.g.cs", sb.ToString());
+        }
+
+        private void DebugAttributes(StringBuilder sb, BaseAttributes attributes)
+        {
+            foreach (var attr in attributes.Attributes)
+            {
+                sb.AppendLine($"      Attribute: Name: {attr.Name}, Namespace: {attr.NameSpace}, FullName {attr.FullName}");
+                
+                if (attr.ConstructorArguments.Any())
+                {
+                    sb.AppendLine($"        Constructor Arguments");
+                    foreach (var arg in attr.ConstructorArguments)
+                    {
+                        sb.AppendLine($"          Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
+                    }
+                }
+
+                if (attr.NamedArguments.Any())
+                {
+                    sb.AppendLine($"          Named Arguments");
+                    foreach (var arg in attr.NamedArguments)
+                    {
+                        sb.AppendLine($"          Name: {arg.Name}, Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
+                    }
+                }
+                sb.AppendLine();
+
+            }
+        }
     }
 }
+    

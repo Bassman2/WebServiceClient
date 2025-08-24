@@ -11,7 +11,7 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         public string NameSpace => data.AttributeClass?.ContainingNamespace?.ToDisplayString() ?? string.Empty;
         
-        public string NameWithNameSpace => data.AttributeClass?.ToDisplayString() ?? string.Empty;
+        public string FullName => data.AttributeClass?.ToDisplayString() ?? string.Empty;
 
         public IEnumerable<ConstructorArgument> ConstructorArguments => data.ConstructorArguments.Select(a => new ConstructorArgument(a));
        

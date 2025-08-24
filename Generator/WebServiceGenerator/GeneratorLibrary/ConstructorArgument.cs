@@ -11,9 +11,6 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         public string Kind => arg.Kind.ToString();
 
-        public override string ToString() =>$"Value: {Value} Type: {TypeName} Kind: {Kind}";
-        
-
         private string FormatTypedConstant(TypedConstant constant)
         {
             if (constant.IsNull)

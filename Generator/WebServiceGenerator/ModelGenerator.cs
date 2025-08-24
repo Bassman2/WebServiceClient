@@ -9,7 +9,8 @@ namespace WebServiceGenerator
     {
         public override void Excecute()
         {
-            Debug();
+            // for debug only
+            CreateDebug();
 
             foreach (var cl in GetAllClassesWithAttribute("WebServiceClient.Attributes.ModelAttribute"))
             {
@@ -28,76 +29,7 @@ namespace WebServiceGenerator
             }
         }
 
-        private void Debug()
-        {
-            StringBuilder sb = new();
-            sb.AppendLine("//##############################################################");
-
-            //foreach (var cl in GetAllClasses())
-
-            Debug(sb, this);
-
-            foreach (var cl in GetAllClassesWithAttribute("WebServiceClient.Attributes.ModelAttribute"))
-            {
-                sb.AppendLine();
-                sb.AppendLine($"// Class: {cl}");
-
-                foreach (var prop in cl.Properties)
-                {
-                    sb.AppendLine($"//   Property: {prop.TypeName} {prop.Name} {{ {(prop.HasGet ? "get; " : "")}{(prop.HasSet ? "set;" : "")} }}");
-
-                    Debug(sb, prop);
-
-                    //foreach (var attr in prop.Attributes)
-                    //{
-                    //    sb.AppendLine($"//     Attribute: {attr.Name} - {attr.NameSpace} - {attr.NameWithNameSpace}");
-
-                    //    foreach (var arg in attr.ConstructorArguments)
-                    //    {
-                    //        sb.AppendLine($"//        {arg}");
-                    //    }
-                    //    foreach (var arg in attr.NamedArguments)
-                    //    {
-                    //        sb.AppendLine($"//        {arg}");
-                    //    }
-                    //}
-                }
-
-                Debug(sb, cl);
-
-                //foreach (var attr in cl.Attributes)
-                //{
-                //    sb.AppendLine($"//   Attribute: {attr.Name} - {attr.NameSpace} - {attr.NameWithNameSpace}");
-
-                //    foreach (var arg in attr.ConstructorArguments)
-                //    {
-                //        sb.AppendLine($"//      {arg}");
-                //    }
-                //    foreach (var arg in attr.NamedArguments)
-                //    {
-                //        sb.AppendLine($"//      {arg}");
-                //    }
-                //}
-            }
-            AddSource($"Debug.g.cs", sb.ToString());
-        }
-
-        private void Debug(StringBuilder sb, BaseAttributes attributes)
-        {
-            foreach (var attr in attributes.Attributes)
-            {
-                sb.AppendLine($"//     Attribute: {attr.Name} - {attr.NameSpace} - {attr.NameWithNameSpace}");
-
-                foreach (var arg in attr.ConstructorArguments)
-                {
-                    sb.AppendLine($"//        {arg}");
-                }
-                foreach (var arg in attr.NamedArguments)
-                {
-                    sb.AppendLine($"//        {arg}");
-                }
-            }
-        }
+        
     }
 }
     

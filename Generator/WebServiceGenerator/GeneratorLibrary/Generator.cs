@@ -29,7 +29,15 @@ namespace WebServiceGenerator.GeneratorLibrary
             Context = context;
             Compilation = tuple.Left;
             Classes = tuple.Right;
-            Excecute();
+            try
+            {
+                Excecute();
+            }
+            catch (Exception ex)
+            {
+                var message = ex.ToString().Replace("/*", "/ *").Replace("*/", "* /");
+                context.AddSource($"Error_{Guid.NewGuid():N}.g.cs", $"/*\r\n{message}\r\n*/");
+            }
         }
 
         protected SourceProductionContext Context { get; private set; }
@@ -67,7 +75,7 @@ namespace WebServiceGenerator.GeneratorLibrary
             // global attributes
             sb.AppendLine("Global Attributes");
             sb.AppendLine();
-            DebugAttributes(sb, this);
+            DebugAttributes(sb, this, 1);
             sb.AppendLine();
 
             sb.AppendLine("Classes");
@@ -75,45 +83,47 @@ namespace WebServiceGenerator.GeneratorLibrary
             {
                 sb.AppendLine();
                 sb.AppendLine( $"  Class: Name: {cl.Name}, Namespace: {cl.NameSpace}, FullName: {cl.FullName}");
+                sb.AppendLine();
 
                 if (cl.Properties.Any())
                 {
+                    DebugAttributes(sb, cl, 2);
                     sb.AppendLine($"    Properties:");
                     foreach (var prop in cl.Properties)
                     {
                         sb.AppendLine($"      {prop.TypeName} {prop.Name} {{ {(prop.HasGet ? "get; " : "")}{(prop.HasSet ? "set;" : "")} }}");
 
-                        DebugAttributes(sb, prop);
+                        DebugAttributes(sb, prop, 4);
                     }
                 }
 
-                DebugAttributes(sb, cl);
             }
             sb.AppendLine($"*/");
             AddSource($"Debug.g.cs", sb.ToString());
         }
 
-        private void DebugAttributes(StringBuilder sb, BaseAttributes attributes)
+        private void DebugAttributes(StringBuilder sb, BaseAttributes attributes, int indent)
         {
+            string indentString = new string(' ', indent * 2);
             foreach (var attr in attributes.Attributes)
             {
-                sb.AppendLine($"      Attribute: Name: {attr.Name}, Namespace: {attr.NameSpace}, FullName {attr.FullName}");
+                sb.AppendLine($"{indentString}Attribute: Name: {attr.Name}, Namespace: {attr.NameSpace}, FullName {attr.FullName}");
                 
                 if (attr.ConstructorArguments.Any())
                 {
-                    sb.AppendLine($"        Constructor Arguments");
+                    sb.AppendLine($"{indentString}  Constructor Arguments");
                     foreach (var arg in attr.ConstructorArguments)
                     {
-                        sb.AppendLine($"          Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
+                        sb.AppendLine($"{indentString}    Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
                     }
                 }
 
                 if (attr.NamedArguments.Any())
                 {
-                    sb.AppendLine($"          Named Arguments");
+                    sb.AppendLine($"{indentString}  Named Arguments");
                     foreach (var arg in attr.NamedArguments)
                     {
-                        sb.AppendLine($"          Name: {arg.Name}, Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
+                        sb.AppendLine($"{indentString}    Name: {arg.Name}, Value: {arg.Value}, Type: {arg.TypeName}, Kind: {arg.Kind}");
                     }
                 }
                 sb.AppendLine();

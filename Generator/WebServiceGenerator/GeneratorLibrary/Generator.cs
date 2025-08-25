@@ -8,12 +8,18 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
+
+// https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md
+
+// https://andrewlock.net/creating-a-source-generator-part-5-finding-a-type-declarations-namespace-and-type-hierarchy/
+
 namespace WebServiceGenerator.GeneratorLibrary
 {
     public class Generator : BaseAttributes, IIncrementalGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
+
             var provider = context.SyntaxProvider.CreateSyntaxProvider(
                     predicate: static (node, _) => node is ClassDeclarationSyntax,
                     transform: static (ctx, _) => (ClassDeclarationSyntax)ctx.Node
@@ -60,6 +66,28 @@ namespace WebServiceGenerator.GeneratorLibrary
             }
         }
 
+        public string AssemblyName => Compilation.AssemblyName ?? "";
+
+        public string Namespace
+        {
+            get
+            {
+                //// Try to get the MSBuild RootNamespace property if available
+                //if (Compilation.Options is Microsoft.CodeAnalysis.CSharp.CSharpCompilationOptions csharpOptions &&
+                //    csharpOptions.SyntaxTreeOptionsProvider is { } provider &&
+                //    Classes.Length > 0 &&
+                //    provider.TryGetGlobalOption(Classes[0].SyntaxTree, "build_property.RootNamespace", out var ns) &&
+                //    ns is string rootNs)
+                //{
+                //    return rootNs;
+                //}
+
+                // Fallback to assembly name
+                return Compilation.AssemblyName ?? "";
+            }
+        }
+        //=> Compilation.Assembly.ContainingNamespace.ToDisplayString();
+
         public IEnumerable<Class> GetAllClassesWithAttribute(string attributeFullName) => GetAllClasses().Where(c => c.HasAttribute(attributeFullName));
 
         public void AddSource(string hintName, string source) => Context.AddSource(hintName, source);
@@ -70,6 +98,16 @@ namespace WebServiceGenerator.GeneratorLibrary
         {
             StringBuilder sb = new();
             sb.AppendLine($"/*");
+            sb.AppendLine();
+            sb.AppendLine($"Global Namespace: {Namespace}");
+            sb.AppendLine($"Assembly Name: {AssemblyName}");
+            sb.AppendLine();
+
+            //sb.AppendLine($"Global Namespace: {Compilation.GlobalNamespace.Name} - {Compilation.GlobalNamespace.ToDisplayString()} {(Compilation.GlobalNamespace.IsGlobalNamespace ? "global" : "")}");
+            foreach (var x in Compilation.GlobalNamespace.GetNamespaceMembers())
+            {
+                sb.AppendLine($"Namespace: {x.Name} - {x.ToDisplayString()} {(x.IsGlobalNamespace ? "global" : "")} {x.NamespaceKind}");
+            }
             sb.AppendLine();
 
             // global attributes
@@ -104,7 +142,7 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         private void DebugAttributes(StringBuilder sb, BaseAttributes attributes, int indent)
         {
-            string indentString = new string(' ', indent * 2);
+            string indentString = new(' ', indent * 2);
             foreach (var attr in attributes.Attributes)
             {
                 sb.AppendLine($"{indentString}Attribute: Name: {attr.Name}, Namespace: {attr.NameSpace}, FullName {attr.FullName}");

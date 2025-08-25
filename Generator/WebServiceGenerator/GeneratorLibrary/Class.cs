@@ -10,6 +10,28 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         public string NameSpace => symbol.ToDisplayString();
 
+        public string RootNameSpace
+        {
+            get
+            {
+                //string nameSpace = NameSpace;
+                //int dotIndex = nameSpace.IndexOf('.');
+                //if (dotIndex > 0)
+                //{
+                //    nameSpace = nameSpace.Substring(0, dotIndex);
+                //}
+                //return nameSpace;
+
+
+                var ns = NameSpace;
+                if (string.IsNullOrEmpty(ns))
+                    return string.Empty;
+
+                int dotIndex = ns.IndexOf('.');
+                return dotIndex > 0 ? ns.Substring(0, dotIndex) : ns;
+            }
+        }
+        
         public string FullName => symbol.ToDisplayString();
 
         public IEnumerable<Property> Properties => symbol.GetMembers().OfType<IPropertySymbol>().Select(p => new Property(p));

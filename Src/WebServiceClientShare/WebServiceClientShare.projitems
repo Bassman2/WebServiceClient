@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelIgnoreAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelPropertyParametersAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\TestAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\Basic2Authenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\MultiAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseClient.cs" />

@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\TestAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\Basic2Authenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\MultiAuthenticator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Authenticator\TokenAuthenticator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ArgumentRequestUriException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Authenticator\ApiKeyAuthenticator.cs" />

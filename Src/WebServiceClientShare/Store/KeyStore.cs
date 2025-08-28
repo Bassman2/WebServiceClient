@@ -43,6 +43,12 @@ public class KeyStore
     public string? Token { get; set; }
 
     /// <summary>
+    /// Gets or sets the authentication token name.
+    /// </summary>
+    [JsonPropertyName("tokenname")]
+    public string? TokenName { get; set; }
+
+    /// <summary>
     /// Gets or sets the expiration date and time of the authentication token.
     /// </summary>
     [JsonPropertyName("tokenexpire")]
@@ -100,6 +106,7 @@ public class KeyStore
         {
             AuthenticationType.None => null,
             AuthenticationType.Basic => new BasicAuthenticator(Login!, Password!),
+            AuthenticationType.Token => new TokenAuthenticator(TokenName!, Token!),
             AuthenticationType.Bearer => new BearerAuthenticator(Token!),
             AuthenticationType.BearerAndJFrogApi => new MultiAuthenticator(new BearerAuthenticator(Token!), new ApiKeyAuthenticator("X-JFrog-Art-Api", Token!)),
             _ => throw new NotSupportedException()

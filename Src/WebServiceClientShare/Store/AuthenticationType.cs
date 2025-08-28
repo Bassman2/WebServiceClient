@@ -17,14 +17,14 @@ public enum AuthenticationType
     Basic,
 
     /// <summary>
+    /// Token-based authentication.
+    /// </summary>
+    Token,
+
+    /// <summary>
     /// Bearer token authentication.
     /// </summary>
     Bearer,
-
-    ///// <summary>
-    ///// Token-based authentication.
-    ///// </summary>
-    //Token,
 
     ///// <summary>
     ///// Login-based authentication.

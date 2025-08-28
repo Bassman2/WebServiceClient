@@ -129,7 +129,7 @@ namespace WebServiceGenerator.GeneratorLibrary
                     sb.AppendLine($"    Properties:");
                     foreach (var prop in cl.Properties)
                     {
-                        sb.AppendLine($"      {prop.TypeName} {prop.Name} {{ {(prop.HasGet ? "get; " : "")}{(prop.HasSet ? "set;" : "")} }}");
+                        sb.AppendLine($"      {prop.Type.Name} {prop.Name} {{ {(prop.HasGet ? "get; " : "")}{(prop.HasSet ? "set;" : "")} }}");
 
                         DebugAttributes(sb, prop, 4);
                     }

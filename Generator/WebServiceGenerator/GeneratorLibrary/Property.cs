@@ -7,7 +7,9 @@ namespace WebServiceGenerator.GeneratorLibrary
     public class Property(IPropertySymbol symbol) : BaseAttributes
     {
         public string Name => symbol.Name;
-        public string TypeName => symbol.Type.ToDisplayString();
+
+        public TypeSym Type => new TypeSym(symbol.Type);
+        
 
         public bool HasGet = symbol.GetMethod != null;
 
@@ -15,6 +17,6 @@ namespace WebServiceGenerator.GeneratorLibrary
 
         public override IEnumerable<Attribute> Attributes => symbol.GetAttributes().Select(a => new Attribute(a));
                 
-        public override string ToString() => $"{TypeName} {Name} {{ {(HasGet ? "get; " : "")}{(HasSet ? "set;" : "")} }}";
+        public override string ToString() => $"{Type.Name} {Name} {{ {(HasGet ? "get; " : "")}{(HasSet ? "set;" : "")} }}";
     }
 }

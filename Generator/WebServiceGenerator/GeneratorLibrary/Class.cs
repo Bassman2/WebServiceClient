@@ -8,7 +8,7 @@ namespace WebServiceGenerator.GeneratorLibrary
     {
         public string Name => symbol.Name;
 
-        public string NameSpace => symbol.ToDisplayString();
+        public string NameSpace => symbol.ContainingNamespace?.ToDisplayString() ?? string.Empty;
 
         public string RootNameSpace
         {

@@ -23,9 +23,9 @@ namespace WebServiceGenerator.GeneratorLibrary
             var provider = context.SyntaxProvider.CreateSyntaxProvider(
                     predicate: static (node, _) => node is ClassDeclarationSyntax,
                     transform: static (ctx, _) => (ClassDeclarationSyntax)ctx.Node
-                    ).Where(m => m is not null);
+                    ).Where(m => m is not null).Collect();
 
-            var compilation = context.CompilationProvider.Combine(provider.Collect());
+            var compilation = context.CompilationProvider.Combine(provider);
 
             context.RegisterSourceOutput(compilation, Excecute);
         }

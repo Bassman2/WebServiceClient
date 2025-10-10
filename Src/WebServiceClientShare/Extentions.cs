@@ -31,7 +31,7 @@ internal static class Extentions
 
     public static List<T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IEnumerable? value, object service) where T : class
     {
-        return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null) ?? throw new ArgumentException($"CastModel with service failed for {typeof(T).Name}!"))).ToList<T>();
+        return value?.Cast<object>().Select(i => (T)(Activator.CreateInstance(typeof(T), ConstructorDefault, null, [service, i], null) ?? throw new ArgumentException($"CastModel with jira failed for {typeof(T).Name}!"))).ToList<T>();
     }
 
     public static Dictionary<string, T>? CastModel<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this Dictionary<string, object> value) where T : class

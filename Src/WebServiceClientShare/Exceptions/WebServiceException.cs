@@ -1,7 +1,7 @@
 ﻿namespace WebServiceClient;
 
 /// <summary>
-/// Represents an exception that occurs during web service operations.
+/// Represents an exception that occurs during web jira operations.
 /// </summary>
 public class WebServiceException : Exception
 {
@@ -16,8 +16,8 @@ public class WebServiceException : Exception
     ///// Initializes a new instance of the <see cref="WebServiceException"/> class with a specified error message, request URI, and HTTP status code.
     ///// </summary>
     ///// <param name="requestUri">The URI of the web request that caused the error.</param>
-    ///// <param name="statusCode">The HTTP status code returned by the web service.</param>
-    ///// <param name="reasonPhrase">The reason phrase returned by the web service.</param>
+    ///// <param name="statusCode">The HTTP status code returned by the web jira.</param>
+    ///// <param name="reasonPhrase">The reason phrase returned by the web jira.</param>
     //public WebServiceException(Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase) 
     //    : base($"{statusCode} {reasonPhrase}: \"{requestUri}\"")
     //{
@@ -29,8 +29,8 @@ public class WebServiceException : Exception
     ///// </summary>
     ///// <param name="message">The message that describes the error.</param>
     ///// <param name="requestUri">The URI of the web request that caused the error.</param>
-    ///// <param name="statusCode">The HTTP status code returned by the web service.</param>
-    ///// <param name="reasonPhrase">The reason phrase returned by the web service.</param>
+    ///// <param name="statusCode">The HTTP status code returned by the web jira.</param>
+    ///// <param name="reasonPhrase">The reason phrase returned by the web jira.</param>
     //public WebServiceException(string? message, Uri? requestUri, HttpStatusCode statusCode, string? reasonPhrase)
     //    : base($"{statusCode} {reasonPhrase}: \"{requestUri}\" {message}")
     //{
@@ -60,12 +60,12 @@ public class WebServiceException : Exception
     public Uri? RequestUri { get; }
 
     /// <summary>
-    /// Gets the HTTP status code returned by the web service.
+    /// Gets the HTTP status code returned by the web jira.
     /// </summary>
     public HttpStatusCode StatusCode { get; }
 
     /// <summary>
-    /// Gets the reason phrase returned by the web service.
+    /// Gets the reason phrase returned by the web jira.
     /// </summary>
     public string? ReasonPhrase { get; }
 
@@ -85,10 +85,10 @@ public class WebServiceException : Exception
     }
 
     /// <summary>
-    /// Throws a <see cref="WebServiceException"/> if the specified web service is null or not connected.
+    /// Throws a <see cref="WebServiceException"/> if the specified web jira is null or not connected.
     /// </summary>
-    /// <param name="service">The web service to check.</param>
-    /// <exception cref="WebServiceException">Thrown if the web service is null or not connected.</exception>
+    /// <param name="service">The web jira to check.</param>
+    /// <exception cref="WebServiceException">Thrown if the web jira is null or not connected.</exception>
     public static void ThrowIfNullOrNotConnected([NotNull] WebService? service)
     {
         if (service == null)
@@ -102,7 +102,7 @@ public class WebServiceException : Exception
     }
 
     /// <summary>
-    /// Throws a <see cref="WebServiceException"/> if the specified HTTP client is null, indicating that the web service is not connected.
+    /// Throws a <see cref="WebServiceException"/> if the specified HTTP client is null, indicating that the web jira is not connected.
     /// </summary>
     /// <param name="client">The HTTP client to check.</param>
     /// <exception cref="WebServiceException">Thrown if the HTTP client is null.</exception>

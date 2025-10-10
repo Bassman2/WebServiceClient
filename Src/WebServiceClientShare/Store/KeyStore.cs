@@ -9,7 +9,7 @@ internal partial class KeyStoreContext : JsonSerializerContext
 { }
 
 /// <summary>
-/// Represents a storage for key-value pairs related to web service authentication and configuration.
+/// Represents a storage for key-value pairs related to web jira authentication and configuration.
 /// Provides methods to retrieve and initialize key store items from a JSON file.
 /// </summary>
 public class KeyStore

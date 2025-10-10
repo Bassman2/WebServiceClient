@@ -29,8 +29,8 @@ public abstract class WebService : IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="WebService"/> class with the specified host, authenticator, and application name.
     /// </summary>
-    /// <param name="host">The base URI of the web service.</param>
-    /// <param name="authenticator">The authenticator used to authenticate the web service client.</param>
+    /// <param name="host">The base URI of the web jira.</param>
+    /// <param name="authenticator">The authenticator used to authenticate the web jira client.</param>
     /// <param name="appName">The name of the application.</param>
     public WebService(Uri host, IAuthenticator? authenticator = null, string? appName = null)
     {
@@ -75,12 +75,12 @@ public abstract class WebService : IDisposable
     }
 
     /// <summary>
-    /// Gets the base URI of the web service.
+    /// Gets the base URI of the web jira.
     /// </summary>
     public Uri Host { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the web service is connected.
+    /// Gets a value indicating whether the web jira is connected.
     /// </summary>
     public bool IsConnected => client != null;
 
@@ -135,10 +135,10 @@ public abstract class WebService : IDisposable
     #region Version
 
     /// <summary>
-    /// Gets the version of the web service asynchronously.
+    /// Gets the version of the web jira asynchronously.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web service.</returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web jira.</returns>
     public virtual async Task<Version?> GetVersionAsync(CancellationToken cancellationToken = default)
     {
         var res = await GetVersionStringAsync(cancellationToken);
@@ -146,10 +146,10 @@ public abstract class WebService : IDisposable
     }
 
     /// <summary>
-    /// Gets the version of the web service as a string asynchronously.
+    /// Gets the version of the web jira as a string asynchronously.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web service as a string.</returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the version of the web jira as a string.</returns>
     //public abstract Task<string?> GetVersionStringAsync(CancellationToken cancellationToken);
 
     public virtual async Task<string?> GetVersionStringAsync(CancellationToken cancellationToken = default)

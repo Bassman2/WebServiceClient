@@ -6,17 +6,17 @@
 /// <remarks>
 /// Initializes a new instance of the <see cref="JsonService"/> class using the specified host, authenticator, application name, and JSON serializer context.
 /// </remarks>
-/// <param name="host">The service host URI.</param>
-/// <param name="authenticator">The authenticator to use for the service.</param>
-/// <param name="appName">The name of the application using the service.</param>
+/// <param name="host">The jira host URI.</param>
+/// <param name="authenticator">The authenticator to use for the jira.</param>
+/// <param name="appName">The name of the application using the jira.</param>
 /// <param name="context">The <see cref="JsonSerializerContext"/> used for JSON serialization and deserialization.</param>
 public abstract class JsonService(Uri host, IAuthenticator? authenticator, string appName, JsonSerializerContext context) : WebService(host, authenticator, appName)
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonService"/> class using the specified store key, application name, and JSON serializer context.
     /// </summary>
-    /// <param name="storeKey">The key used to retrieve the service host and authenticator from the <see cref="KeyStore"/>.</param>
-    /// <param name="appName">The name of the application using the service.</param>
+    /// <param name="storeKey">The key used to retrieve the jira host and authenticator from the <see cref="KeyStore"/>.</param>
+    /// <param name="appName">The name of the application using the jira.</param>
     /// <param name="context">The <see cref="JsonSerializerContext"/> used for JSON serialization and deserialization.</param>
     public JsonService(string storeKey, string appName, JsonSerializerContext context)
         : this(KeyStore.Key(storeKey)!.Url, KeyStore.Key(storeKey)!.Authenticator, appName, context)
@@ -28,7 +28,7 @@ public abstract class JsonService(Uri host, IAuthenticator? authenticator, strin
     protected readonly JsonSerializerContext context = context; 
 
     /// <summary>
-    /// Configures the <see cref="HttpClient"/> instance for JSON-based web service requests.
+    /// Configures the <see cref="HttpClient"/> instance for JSON-based web jira requests.
     /// </summary>
     /// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
     /// <remarks>

@@ -1,14 +1,11 @@
 ﻿namespace WebServiceClient.Authenticator;
 
-internal class BasicAuthenticator(string name, string login, string password, Encoding? encoding = null) : IAuthenticator
+internal class BasicAuthenticator(string login, string password) : IAuthenticator
 {
     public void Authenticate(WebService service, HttpClient client)
     {
-        string header = Convert.ToBase64String((encoding ?? Encoding.UTF8).GetBytes($"{login}:{password}"));
-        client.DefaultRequestHeaders.Add(name, "Basic " + header);
-
-        //client.DefaultRequestHeaders.Add("Authorization", "Basic YnM6VmlzdWFsRW50ZTYuMVNwMg==");
-        //Authorization: Basic YnM6VmlzdWFsRW50ZTYuMVNwMg==
+        string header = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{login}:{password}"));
+        client.DefaultRequestHeaders.Add("Authorization", "Basic " + header);
     }
 }
 

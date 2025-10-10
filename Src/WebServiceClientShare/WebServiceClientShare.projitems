@@ -9,6 +9,7 @@
     <Import_RootNamespace>WebServiceClient</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\CastAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Attributes\ModelPropertyParametersAttribute.cs" />

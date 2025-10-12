@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Src/">
+    <Project Path="Src/WebServiceClient80/WebServiceClient80.csproj" />
+    <Project Path="Src/WebServiceClientShare/WebServiceClientShare.shproj" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="Test/WebServiceDepenencyConsole/WebServiceDepenencyConsole.csproj" />
+    <Project Path="Test/WebServiceShareConsole/WebServiceShareConsole.csproj" />
+  </Folder>
+</Solution>

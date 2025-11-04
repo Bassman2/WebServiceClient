@@ -3,7 +3,7 @@
 // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/source-generation
 
 
-[JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, WriteIndented = true, AllowTrailingCommas = true)]
+[JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, WriteIndented = true, AllowTrailingCommas = true, ReadCommentHandling = JsonCommentHandling.Skip)]
 [JsonSerializable(typeof(Dictionary<string, KeyStore>))]
 internal partial class KeyStoreContext : JsonSerializerContext
 { }

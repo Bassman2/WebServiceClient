@@ -7,7 +7,7 @@
             Console.WriteLine("Hello, World!");
 
             using var service = new TestService(new Uri("http://"));
-            DemoModel? demo = service.GetDemo();
+            //DemoModel? demo = service.GetDemo();
         }
     }
 }

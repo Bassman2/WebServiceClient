@@ -24,22 +24,10 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-#    - name: Checkout
-#      uses: actions/checkout@v3
-      
     - name: Checkout Main
       uses: actions/checkout@v6
-      with:
-        path: main
-        
-    - name: Checkout WebServiceClient
-      uses: actions/checkout@v6
-      with:
-        repository: Bassman2/WebServiceClient
-        path: WebServiceClient  
-      
       
     - name: Dotnet Setup
       uses: actions/setup-dotnet@v5
@@ -47,13 +35,13 @@ jobs:
         dotnet-version: 9.x
 
     - run: dotnet tool update -g docfx
-    - run: docfx main/DocFx/docfx.json
+    - run: docfx DocFx/docfx.json
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v4
       with:
         # Upload entire repository
-        path: 'main/docs'
+        path: 'docs'
         
     - name: Deploy to GitHub Pages
       id: deployment

@@ -5,7 +5,9 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Src/">
+    <Project Path="Src/WebServiceClient100/WebServiceClient100.csproj" />
     <Project Path="Src/WebServiceClient80/WebServiceClient80.csproj" />
+    <Project Path="Src/WebServiceClient90/WebServiceClient90.csproj" />
     <Project Path="Src/WebServiceClientShare/WebServiceClientShare.shproj" />
   </Folder>
   <Folder Name="/Test/">

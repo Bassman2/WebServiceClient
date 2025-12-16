@@ -27,25 +27,26 @@ public abstract class JsonService(Uri host, IAuthenticator? authenticator, strin
     /// </summary>
     protected readonly JsonSerializerContext context = context; 
 
-    /// <summary>
-    /// Configures the <see cref="HttpClient"/> instance for JSON-based web jira requests.
-    /// </summary>
-    /// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
-    /// <remarks>
-    /// Sets the default request headers to accept JSON and other common content types.
-    /// Override this method to apply additional client configuration before making requests.
-    /// </remarks>
-    protected override void InitializeClient(HttpClient client)
-    {
-    //    client.DefaultRequestHeaders.Add("Accept", "application/json");
-        client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-        // content-type    text/html;charset=UTF-8
-        // client.DefaultRequestHeaders.Conmtent
-        client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.org.jfrog.artifactory.system.ExportSettings+json");
-        base.InitializeClient(client);
-    }
+    ///// <summary>
+    ///// Configures the <see cref="HttpClient"/> instance for JSON-based web jira requests.
+    ///// </summary>
+    ///// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
+    ///// <remarks>
+    ///// Sets the default request headers to accept JSON and other common content types.
+    ///// Override this method to apply additional client configuration before making requests.
+    ///// </remarks>
+    //protected override void InitializeClient(HttpClient client)
+    //{
+    //    base.InitializeClient(client);
+
+    //    //    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    //    //client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+    //    //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    //    //client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+    //    // content-type    text/html;charset=UTF-8
+    //    // client.DefaultRequestHeaders.Conmtent
+    //    //client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.org.jfrog.artifactory.system.ExportSettings+json");
+    //}
 
     #region Get
 

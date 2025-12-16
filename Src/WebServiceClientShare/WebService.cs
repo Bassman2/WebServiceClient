@@ -41,8 +41,8 @@ public abstract class WebService : IDisposable
             Timeout = new TimeSpan(0, 2, 0)
         };
         WebServiceException.ThrowIfNotConnected(client);
-        client.DefaultRequestHeaders.Add("User-Agent", appName ?? "WebServices");
-        InitializeClient(client);
+        
+        InitializeClient(client, appName ?? "WebServices");
         authenticator?.Authenticate(this, this.client);
         if (!string.IsNullOrWhiteSpace(AuthenticationTestUrl))
         {
@@ -51,15 +51,12 @@ public abstract class WebService : IDisposable
     }
 
     /// <summary>
-    /// Allows derived classes to customize the initialization of the <see cref="HttpClient"/> instance.
+    /// When implemented in a derived class, configures the provided <see cref="HttpClient"/> instance with service-specific settings,
+    /// such as default headers, authentication, or other initialization logic required for the web service.
     /// </summary>
-    /// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
-    /// <remarks>
-    /// Override this method in a derived class to set additional headers, configure default request options,
-    /// or apply other custom settings to the HTTP client before it is used for requests.
-    /// </remarks>
-    protected virtual void InitializeClient(HttpClient client)
-    { }
+    /// <param name="client">The <see cref="HttpClient"/> to be initialized.</param>
+    /// <param name="appName">The name of the application or client using the service.</param>
+    protected abstract void InitializeClient(HttpClient client, string appName);
 
     /// <summary>
     /// Releases the resources used by the <see cref="WebService"/> class.

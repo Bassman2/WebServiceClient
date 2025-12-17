@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>WebServiceClientUnitTest</AssemblyName>
     <RootNamespace>WebServiceClientUnitTest</RootNamespace>
+    <Version>0.3.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

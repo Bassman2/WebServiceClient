@@ -30,22 +30,22 @@ public abstract class JsonService(Uri host, IAuthenticator? authenticator, strin
     ///// <summary>
     ///// Configures the <see cref="HttpClient"/> instance for JSON-based web jira requests.
     ///// </summary>
-    ///// <param name="client">The <see cref="HttpClient"/> to be initialized or configured.</param>
+    ///// <param name="sender">The <see cref="HttpClient"/> to be initialized or configured.</param>
     ///// <remarks>
     ///// Sets the default request headers to accept JSON and other common content types.
-    ///// Override this method to apply additional client configuration before making requests.
+    ///// Override this method to apply additional sender configuration before making requests.
     ///// </remarks>
-    //protected override void InitializeClient(HttpClient client)
+    //protected override void InitializeClient(HttpClient sender)
     //{
-    //    base.InitializeClient(client);
+    //    base.InitializeClient(sender);
 
-    //    //    client.DefaultRequestHeaders.Add("Accept", "application/json");
-    //    //client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-    //    //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    //    //client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+    //    //    sender.DefaultRequestHeaders.Add("Accept", "application/json");
+    //    //sender.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+    //    //    sender.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+    //    //sender.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
     //    // content-type    text/html;charset=UTF-8
-    //    // client.DefaultRequestHeaders.Conmtent
-    //    //client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.org.jfrog.artifactory.system.ExportSettings+json");
+    //    // sender.DefaultRequestHeaders.Conmtent
+    //    //sender.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.org.jfrog.artifactory.system.ExportSettings+json");
     //}
 
     #region Get

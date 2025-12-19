@@ -102,14 +102,14 @@ public class WebServiceException : Exception
     }
 
     /// <summary>
-    /// Throws a <see cref="WebServiceException"/> if the specified HTTP client is null, indicating that the web jira is not connected.
+    /// Throws a <see cref="WebServiceException"/> if the specified HTTP sender is null, indicating that the web jira is not connected.
     /// </summary>
-    /// <param name="client">The HTTP client to check.</param>
-    /// <exception cref="WebServiceException">Thrown if the HTTP client is null.</exception>
+    /// <param name="client">The HTTP sender to check.</param>
+    /// <exception cref="WebServiceException">Thrown if the HTTP sender is null.</exception>
     public static void ThrowIfNotConnected([NotNull] HttpClient? client)
     {
         _ = client ?? throw new WebServiceException("WebService is not connected");
-        //if (client == null)
+        //if (sender == null)
         //{
         //    throw new WebServiceException("WebService is not connected");
         //}

@@ -6,7 +6,7 @@
 public abstract class WebService : IDisposable
 {
     /// <summary>
-    /// The HTTP client used for making requests.
+    /// The HTTP sender used for making requests.
     /// </summary>
     protected internal HttpClient? client;
 
@@ -16,7 +16,7 @@ public abstract class WebService : IDisposable
     protected virtual string? AuthenticationTestUrl => null;
 
     /// <summary>
-    /// The HTTP client handler with custom settings.
+    /// The HTTP sender handler with custom settings.
     /// </summary>
     protected readonly HttpClientHandler httpClientHandler = new()
     {
@@ -30,7 +30,7 @@ public abstract class WebService : IDisposable
     /// Initializes a new instance of the <see cref="WebService"/> class with the specified host, authenticator, and application name.
     /// </summary>
     /// <param name="host">The base URI of the web jira.</param>
-    /// <param name="authenticator">The authenticator used to authenticate the web jira client.</param>
+    /// <param name="authenticator">The authenticator used to authenticate the web jira sender.</param>
     /// <param name="appName">The name of the application.</param>
     public WebService(Uri host, IAuthenticator? authenticator = null, string? appName = null)
     {
@@ -55,7 +55,7 @@ public abstract class WebService : IDisposable
     /// such as default headers, authentication, or other initialization logic required for the web service.
     /// </summary>
     /// <param name="client">The <see cref="HttpClient"/> to be initialized.</param>
-    /// <param name="appName">The name of the application or client using the service.</param>
+    /// <param name="appName">The name of the application or sender using the service.</param>
     protected abstract void InitializeClient(HttpClient client, string appName);
 
     /// <summary>
@@ -300,13 +300,13 @@ public abstract class WebService : IDisposable
 
     //{
     //    //ArgumentRequestUriException.ThrowIfNullOrWhiteSpace(requestUri, nameof(requestUri));
-    //    WebServiceException.ThrowIfNotConnected(client);
+    //    WebServiceException.ThrowIfNotConnected(sender);
 
-    //    using HttpResponseMessage resp = await client.GetAsync(requestUri, cancellationToken);
+    //    using HttpResponseMessage resp = await sender.GetAsync(requestUri, cancellationToken);
     //    Uri? reqUri = resp.RequestMessage?.RequestUri;
 
 
-    //    using HttpResponseMessage response = await client.GetAsync(reqUri, cancellationToken);
+    //    using HttpResponseMessage response = await sender.GetAsync(reqUri, cancellationToken);
     //    string str = await response.Content.ReadAsStringAsync(cancellationToken);
     //    await ErrorCheckAsync(response, memberName, cancellationToken);
     //    using var file = System.IO.File.Create(filePath);

@@ -1,7 +1,7 @@
 ﻿namespace WebServiceClient.Store;
 
 /// <summary>
-/// Specifies the type of authentication used in the web jira client.
+/// Specifies the type of authentication used in the web jira sender.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<AuthenticationType>))]
 public enum AuthenticationType

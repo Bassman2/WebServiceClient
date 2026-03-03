@@ -62,14 +62,14 @@ jobs:
       if: ${{ hashFiles( 'main/Nuget/*.nuspec' ) != '' }}
 
     - name: Upload nuget pack artifact
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ github.event.repository.name }}NugetPackage.zip
         path: main/Nuget/*.nupkg
       if: ${{ hashFiles( 'main/Nuget/*.nuspec' ) != '' }}
 
     - name: Upload documentation artifact
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ github.event.repository.name }}Doc.zip
         path: main/Doc/${{ github.event.repository.name }}Doc/Help/${{ github.event.repository.name }}.chm

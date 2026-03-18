@@ -38,7 +38,7 @@ public abstract class WebService : IDisposable
         this.client = new HttpClient(httpClientHandler)
         {
             BaseAddress = host,
-            Timeout = new TimeSpan(0, 2, 0)
+            Timeout = new TimeSpan(0, 10, 0)
         };
         WebServiceException.ThrowIfNotConnected(client);
         

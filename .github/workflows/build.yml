@@ -20,12 +20,12 @@ jobs:
 
     steps:
     - name: Checkout Main
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         path: main
         
     - name: Checkout WebServiceClient
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: Bassman2/WebServiceClient
         path: WebServiceClient
